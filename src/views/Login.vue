@@ -114,7 +114,7 @@
       <div class="divider"></div>
 
       <div class="login-link">
-        <span>{{ $t('auth.DO_NOT_HAVE_WALLET') }}</span>
+        <span>{{ $t('auth.DO_NOT_HAVE_WALLET') }}&nbsp;</span>
         <router-link to="/signup" class="login-router transition-faster">
           <span data-cy="signUpButton">
             {{ $t('auth.SIGNUP') }}
