@@ -111,6 +111,21 @@
         ⚠ {{ $t('export.KEY_PASSWORD_PROTECTED') }}
       </div>
 
+      <div class="field">
+          <label class="label">{{ $t('common.CONFIRM_PASSWORD') }}</label>
+
+          <div class="control">
+            <input
+              type="password"
+              ref="login_password"
+              class="input"
+              data-cy="walletPassword"
+              name="walletPassword"
+              v-model="password"
+            />
+          </div>
+        </div>
+
       <button
         data-cy="privateKeyJsonButton"
         class="button is-blue big-button is-login transition-faster mt-4"

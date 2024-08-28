@@ -28,7 +28,7 @@ export default defineComponent({
   },
   methods: {
     setPassword(data: any) {
-      return data
+      return this.$emit('setPassword', data)
     },
     executeHiddenRecovery() {
       if (this.store.hiddenLogin && this.store.hiddenLogin.type == 'recovery') {

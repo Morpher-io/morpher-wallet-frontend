@@ -44,7 +44,7 @@ export default defineComponent({
   },
   methods: {
     processMethod(data: any) {
-      return data
+      return this.$emit('processMethod', data)
     },
     googleTokenLogin() {
       ;(window as any).google.accounts.oauth2

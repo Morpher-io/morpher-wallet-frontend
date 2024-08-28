@@ -75,7 +75,7 @@ export default defineComponent({
   },
   methods: {
     processMethod(data: any) {
-      return data
+      this.$emit('processMethod', data)
     },
     async onLogin(data: any) {
       this.processing = true
@@ -103,7 +103,7 @@ export default defineComponent({
         recoveryTypeId: this.recoveryTypeId,
         token: accessToken,
         email: data.authResponse.email,
-        currentRecoveryTypeId: this.store.recoveryTypeId
+        currentRecoveryTypeId: this.store?.recoveryTypeId
       })
         .then(async () => {
           if ((window as any).gtag)

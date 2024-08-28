@@ -7,7 +7,7 @@
             <div class="field">
               <label class="label">{{ $t('common.CURRENT_EMAIL') }}</label>
               <div class="control">
-                {{ currentEmail }}
+                {{ store.email }}
               </div>
             </div>
             <div class="field">
@@ -54,7 +54,7 @@
           <button
             class="button is-green big-button is-login transition-faster"
             data-cy="updateEmailButton"
-            :disabled="!newEmail || (!password && recoveryTypeId !== 3 && recoveryTypeId !== 6)"
+            :disabled="!newEmail || (!password && store?.recoveryTypeId !== 3 && store?.recoveryTypeId !== 6)"
             @click="
               setNewData({
                 email: newEmail,
@@ -101,8 +101,6 @@ export default defineComponent({
       password: '',
       logonError: '',
       loginUser,
-      recoveryTypeId: this.store.recoveryTypeId,
-      currentEmail: this.store.walletEmail
     }
   },
   methods: {
@@ -130,32 +128,32 @@ export default defineComponent({
       this.logonError = ''
 
       if (!data.email) {
-        return { email: null, password: null }
+        return this.$emit('setNewData', { email: null, password: null })
       }
 
       const emailMessage = await validateInput('email', data.email)
 
       if (emailMessage) {
         this.logonError = emailMessage
-        return { email: null, password: null }
+        return this.$emit('setNewData', { email: null, password: null })
       }
 
       let newPassword = ''
-      if (this.recoveryTypeId !== 3 && this.recoveryTypeId !== 6) {
+      if (this.store?.recoveryTypeId !== 3 && this.store?.recoveryTypeId !== 6) {
         newPassword = await sha256(data.password)
 
         if (this.store.hashedPassword !== newPassword) {
           this.logonError = this.$t('errors.WRONG_PASSWORD').toString()
-          return { email: null, password: null }
+          return this.$emit('setNewData', { email: null, password: null })
         }
       }
 
       if (this.store.email === this.newEmail) {
         this.logonError = this.$t('errors.SAME_EMAIL').toString()
-        return { email: null, password: null }
+        return this.$emit('setNewData', { email: null, password: null })
       }
 
-      return { email: data.email, password: newPassword }
+      return this.$emit('setNewData', { email: data.email, password: newPassword })
     },
     handleKeyPress(e: any) {
       const key = e.which || e.charCode || e.keyCode || 0

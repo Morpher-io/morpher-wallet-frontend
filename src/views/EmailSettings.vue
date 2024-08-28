@@ -54,7 +54,6 @@ export default defineComponent({
       twoFaSent: false,
       twoFa,
       logonError: '',
-      recoveryTypeId: this.store.recoveryTypeId
     }
   },
   methods: {
@@ -66,7 +65,7 @@ export default defineComponent({
       })
     },
     async setNewData(data: any) {
-      if (!data.email || (!data.password && this.recoveryTypeId !== 3 && this.recoveryTypeId !== 6))
+      if (!data.email || (!data.password && this.store?.recoveryTypeId !== 3 && this.store?.recoveryTypeId !== 6))
         return
 
       this.newEmail = data.email

@@ -107,7 +107,7 @@ export default defineComponent({
           recoveryTypeId: this.recoveryTypeId,
           token,
           email: googleUser.email,
-          currentRecoveryTypeId: this.store.recoveryTypeId
+          currentRecoveryTypeId: this.store?.recoveryTypeId
         })
           .then(async () => {
             if ((window as any).gtag)

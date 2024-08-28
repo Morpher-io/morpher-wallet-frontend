@@ -12,8 +12,7 @@ function getAccountsFromKeystore(keystore: HDAccount) {
 
 function downloadEncryptedKeystore(exportedSeed: any, account: string) {
   const now = new Date()
-  download(
-    JSON.stringify(exportedSeed),
+  download(exportedSeed,
     'keystore' + '--' + now.toISOString() + '--' + account + '.json'
   )
 }

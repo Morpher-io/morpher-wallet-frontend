@@ -31,7 +31,7 @@ export default defineComponent({
   },
   methods: {
     setPassword(data: any) {
-      return data
+      return this.$emit('setPassword', data)
     },
     onError(error: any) {
       let errorMessage = error.error || error.err || error.message || JSON.stringify(error)

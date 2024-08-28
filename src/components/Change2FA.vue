@@ -107,7 +107,12 @@ export default defineComponent({
   },
   methods: {
     setCurrentMethod(method: any, isEnabling: boolean) {
-      console.log('setCurrentMethod', method, isEnabling)
+      if (isEnabling && (this as any).$gtag && (window as any).gtag)
+			(window as any).gtag('event', 'add_2fa', {
+				method
+			});
+
+      this.$emit('setCurrentMethod', { method, isEnabling })
     }
   }
 })

@@ -20,7 +20,6 @@ import { getKeystore } from '@/utils/keystore'
 import { getSessionStore, saveSessionStore, removeSessionStore } from '@/utils/sessionStore'
 import * as Sentry from '@sentry/vue'
 import { hashTypedData, parseSignature, toHex } from 'viem'
-
 import type {
   Type2FARequired,
   TypeSeedFoundData,
@@ -57,6 +56,7 @@ import download from 'downloadjs'
 
 import { i18n } from '../plugins/i18n'
 import Cookie from 'js-cookie'
+import { encryptKeystoreJson } from '@/utils/jsonKeystore'
 
 export interface WalletState {
   loading: boolean
@@ -735,7 +735,7 @@ export const useWalletStore = defineStore('wallet', {
         }
 
         if (this.twoFaRequired.authenticator == true) {
-          const result = await verifyAuthenticatorCode(this.email, params.authenticator2FA)
+          const result = await verifyAuthenticatorCode(this.email, String(params.authenticator2FA))
 
           if (result.success) {
             authenticatorCorrect = true
@@ -1175,67 +1175,33 @@ export const useWalletStore = defineStore('wallet', {
       const storedPassword = await sha256(params.password)
       if (storedPassword == this.hashedPassword) {
         if (this.keystore !== null) {
-          const hdkey = this.keystore.getHdKey()
+          try {
+                        
+            const hdkey = this.keystore.getHdKey()
 
-          let privateKey = ''
-          if (hdkey.privateKey) {
-            privateKey = toHex(hdkey.privateKey)
+            if (hdkey && hdkey.privateKey) {
+
+              let privateKey = toHex(hdkey.privateKey)
+              
+
+              const data: string = await encryptKeystoreJson({
+                address: this.keystore.address,
+                privateKey: privateKey
+              }, params.password)
+
+
+              downloadEncryptedKeystore(data, params.account)
+              this.delayedSpinnerMessage(i18n.t('export.KEYSTORE_SUCCESSFUL'))
+              this.setKeystoreExported()
+            }
+
+          } catch (err) {
+            console.log('erroe encoding json', err)
           }
-
-          const base64ToUInt8Array = (b64: string) =>
-            Uint8Array.from(window.atob(b64), (c) => c.charCodeAt(0))
-
-          const textToUInt8Array = (s: string) => new TextEncoder().encode(s)
-          const UInt8ArrayToString = (u8: number[]) => String.fromCharCode.apply(null, u8)
-          const convert = (Uint8Arr: Uint8Array) => {
-            const return_data: number[] = []
-
-            Uint8Arr.forEach((uint8) => {
-              return_data.push(uint8)
-            })
-
-            return return_data
-          }
-          const UInt8ArrayToBase64 = (u8: Uint8Array) =>
-            window.btoa(UInt8ArrayToString(convert(u8)))
-
-          const key = await crypto.subtle.importKey(
-            'raw',
-            base64ToUInt8Array(params.password),
-            {
-              name: 'AES-CTR'
-            },
-            false,
-            ['encrypt', 'decrypt']
-          )
-
-          const iv = window.crypto.getRandomValues(new Uint8Array(16))
-
-          const ciphertext = new Uint8Array(
-            await crypto.subtle.encrypt(
-              {
-                name: 'AES-CTR',
-                counter: iv,
-                length: 128
-              },
-              key,
-              textToUInt8Array(privateKey)
-            )
-          )
-
-          const data = {
-            iv: UInt8ArrayToBase64(iv),
-            ciphertext: UInt8ArrayToBase64(ciphertext)
-          }
-
-          console.log('export data', data)
-
-          downloadEncryptedKeystore(data, params.account)
-          this.delayedSpinnerMessage(i18n.t('export.KEYSTORE_SUCCESSFUL'))
-          this.setKeystoreExported()
         }
+      
       } else {
-        this.delayedSpinnerMessage('Wrong password for Seed Phrase')
+        this.delayedSpinnerMessage('Wrong password for JSON export')
       }
     },
     showSeedPhrase(params: TypeShowPhraseKeyVariables) {

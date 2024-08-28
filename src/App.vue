@@ -86,8 +86,9 @@ export default defineComponent({
     if (!this.iFrameDisplay) {
       this.NFTBackground = getRandomNFTBackground()
 
-      window.document.body.style.backgroundImage =
-        '/assets/img/nft_backgrounds/' + this.NFTBackground.image
+      let url = new URL('/img/nft_backgrounds/' + this.NFTBackground.image, import.meta.url).href
+      url = `url('${url}')`
+      window.document.body.style.backgroundImage = url
     } else {
       const storeObject = this.store
       const routerObject = this.$router

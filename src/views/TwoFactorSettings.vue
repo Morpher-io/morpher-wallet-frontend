@@ -116,12 +116,12 @@ export default defineComponent({
     this.authenticator = this.store.twoFaRequired.authenticator
     this.authenticatorConfirmed = this.store.twoFaRequired.authenticatorConfirmed
 
-    if (this.store.recoveryTypeId == 3 || this.store.recoveryTypeId == 6) {
+    if (this.store?.recoveryTypeId == 3 || this.store?.recoveryTypeId == 6) {
       const find = this.store.recoveryMethods.find(
-        (recovery) => recovery.id == this.store.recoveryTypeId
+        (recovery) => recovery.id == this.store?.recoveryTypeId
       )
       if (find && find.email == this.store.email) {
-        this.ssoEmailError = this.store.recoveryTypeId
+        this.ssoEmailError = this.store?.recoveryTypeId
         return
       }
     }
@@ -144,7 +144,7 @@ export default defineComponent({
             email,
             authenticator,
             email2faVerification: this.emailCode,
-            authenticator2faVerification: this.authenticatorCode
+            authenticator2faVerification: String(this.authenticatorCode)
           })
 
           if (this.isEnabling && !this.emailCode) {
@@ -172,7 +172,7 @@ export default defineComponent({
             email,
             authenticator,
             email2faVerification: this.emailCode,
-            authenticator2faVerification: this.authenticatorCode
+            authenticator2faVerification: String(this.authenticatorCode)
           })
 
           this.email = email

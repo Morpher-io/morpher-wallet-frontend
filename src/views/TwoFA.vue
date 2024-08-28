@@ -56,7 +56,7 @@
         <label class="label">{{ $t('2fa.EMAIL_CODE') }}</label>
         <div class="control">
           <input
-            type="number"
+            type="string"
             inputmode="numeric"
             min="100000"
             max="999999"
@@ -74,7 +74,7 @@
         <label class="label">{{ $t('2fa.AUTH_CODE') }}</label>
         <div class="control">
           <input
-            type="number"
+            type="string"
             inputmode="numeric"
             class="input"
             name="authenticatorCode"
@@ -238,7 +238,7 @@ export default defineComponent({
       this.showSpinner(this.$t('loader.VALIDATING_CODE').toString())
       this.unlock2FA({
         email2FA: this.emailCode,
-        authenticator2FA: this.authenticatorCode,
+        authenticator2FA: String(this.authenticatorCode),
         recaptchaToken: this.recaptchaToken
       })
         .then((nextroute) => {
@@ -287,7 +287,7 @@ export default defineComponent({
       }
     },
     authenticatorCodeChanged() {
-      if (this.authenticatorCode.length === 6) {
+      if (String(this.authenticatorCode).length === 6) {
         this.validateCode()
       }
     }

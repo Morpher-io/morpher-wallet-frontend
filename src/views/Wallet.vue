@@ -183,7 +183,7 @@ export default defineComponent({
     if (this.isIframe() && !this.store.loginComplete) {
       if (this.store.connection && this.store.connection !== null) {
         const connection: any = await this.store.connection.promise
-        connection.onLogin(this.store.accounts[0], this.store.email, this.store.recoveryTypeId)
+        connection.onLogin(this.store.accounts[0], this.store.email, this.store?.recoveryTypeId)
       }
     }
 
@@ -225,7 +225,7 @@ export default defineComponent({
     },
     logout() {
       this.logoutWallet()
-    }
+    },
   }
 })
 </script>

@@ -61,7 +61,7 @@ export default defineComponent({
   },
   methods: {
     processMethod(data: any) {
-      return data
+      this.$emit('processMethod', data)
     },
     vkPopup(options: any) {
       const screenX = typeof window.screenX != 'undefined' ? window.screenX : window.screenLeft,
@@ -116,7 +116,7 @@ export default defineComponent({
               recoveryTypeId: this.recoveryTypeId,
               token: accessToken,
               email: '',
-              currentRecoveryTypeId: this.store.recoveryTypeId
+              currentRecoveryTypeId: this.store?.recoveryTypeId
             })
               .then(async () => {
                 if ((window as any).gtag)

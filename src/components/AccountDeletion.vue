@@ -96,12 +96,15 @@ export default defineComponent({
   methods: {
     deleteAccount() {
       this.logonError = ''
-      return {
+
+      this.$emit('deleteAccount', {
         input: this.input,
         method: this.currentMethod === 0 ? 'seed' : 'key'
-      }
+      })
+      
     },
     pageBack() {
+      this.$emit('pageBack')
       return
     },
     changeMethod(method: number) {

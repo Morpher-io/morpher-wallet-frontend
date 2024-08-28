@@ -81,7 +81,7 @@ export default defineComponent({
   },
   methods: {
     processMethod(data: any) {
-      return data
+      this.$emit('processMethod', data)
     },
     async doLogin() {
       try {
@@ -153,7 +153,7 @@ export default defineComponent({
         recoveryTypeId: this.recoveryTypeId,
         token: JSON.stringify({ identityToken, authorizationCode, nonce }),
         email,
-        currentRecoveryTypeId: this.store.recoveryTypeId
+        currentRecoveryTypeId: this.store?.recoveryTypeId
       })
         .then(async () => {
           if ((window as any).gtag)

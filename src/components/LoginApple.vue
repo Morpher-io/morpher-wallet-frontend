@@ -31,6 +31,7 @@ import type { PropType } from 'vue'
 const rawNonce = uuid()
 const state = uuid()
 
+
 export default defineComponent({
   components: {},
   mixins: [Global, Authenticated],
@@ -59,7 +60,7 @@ export default defineComponent({
   },
   methods: {
     processMethod(data: any) {
-      return data
+      return this.$emit('processMethod', data)
     },
     async doLogin() {
       try {

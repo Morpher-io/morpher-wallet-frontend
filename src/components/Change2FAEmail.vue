@@ -10,7 +10,7 @@
       <div class="control">
         <input
           data-cy="2faEmailCode"
-          type="number"
+          type="string"
           inputmode="numeric"
           class="input"
           v-model="authenticatorCode"
@@ -58,17 +58,17 @@ export default defineComponent({
   methods: {
     async setCode() {
       if (this.verifyCode === false) {
-        return this.authenticatorCode
+        this.$emit('setCode', this.authenticatorCode)
       } else {
         this.logonError = ''
 
         const isCodeValid = await this.confirmAuthenticator()
         if (isCodeValid) return this.authenticatorCode
-        else return null
+        else this.$emit('setCode', null)
       }
     },
     pageBack() {
-      return
+      this.$emit('pageBack')
     },
     async confirmAuthenticator() {
       if (this.verifyCode !== false) {
