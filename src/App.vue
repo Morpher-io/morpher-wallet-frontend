@@ -191,6 +191,7 @@ export default defineComponent({
             return signedTx
           },
           async signMessage(txObj: any, config: MorpherWalletConfig) {
+            
             const signedTx = await new Promise((resolve, reject) => {
               //see if we are logged in?!
               try {
@@ -220,7 +221,7 @@ export default defineComponent({
                                   reject(e)
                                 })
                             } else {
-                              const signedData = storeObject.keystore.sign(txObj.data) //
+                              const signedData = storeObject.keystore.sign({hash: txObj[0]})
                               resolve(signedData)
                             }
                           } else {
@@ -248,7 +249,7 @@ export default defineComponent({
                         })
                     } else {
                       storeObject.keystore
-                        .sign({ hash: txObj[0] })
+                        .sign({hash: txObj[0]})
                         .then((result) => {
                           resolve(result)
                         })
@@ -259,6 +260,7 @@ export default defineComponent({
                   }
                 }
               } catch (e) {
+                console.log('signMessageError', txObj, e)
                 reject(e)
               }
             })
