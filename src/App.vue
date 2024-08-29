@@ -191,7 +191,9 @@ export default defineComponent({
             return signedTx
           },
           async signMessage(txObj: any, config: MorpherWalletConfig) {
-            
+            console.log('signMessage', txObj, config)
+            console.log('hash', txObj[0])
+
             const signedTx = await new Promise((resolve, reject) => {
               //see if we are logged in?!
               try {
