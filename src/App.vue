@@ -54,7 +54,7 @@ import { connectToParent } from 'penpal'
 import type { MorpherWalletConfig } from './types/global-types'
 import { i18n } from '@/plugins/i18n'
 import Cookie from 'js-cookie'
-import { StateAssignmentConflictError, fromHex } from 'viem'
+import { fromHex } from 'viem'
 
 export default defineComponent({
   components: {
@@ -194,9 +194,7 @@ export default defineComponent({
 
             let sign_hash = tx?.data || tx[0] || tx;
             let message_standard = tx?.messageStandard || 'signPersonalMessage'
-            console.log('signMessage Hash', sign_hash, message_standard)
             
-
             const signedTx = await new Promise((resolve, reject) => {
               //see if we are logged in?!
               try {
@@ -226,7 +224,7 @@ export default defineComponent({
                                   reject(e)
                                 })
                             } else {
-                              const signedData = storeObject.keystore.sign({hash: sign_hash})
+                              const signedData = storeObject.keystore.signMessage({message: { raw: sign_hash}})
                               resolve(signedData)
                             }
                           } else {
@@ -254,7 +252,7 @@ export default defineComponent({
                         })
                     } else {
                       storeObject.keystore
-                        .sign({hash: sign_hash})
+                        .signMessage({message: { raw: sign_hash}})
                         .then((result) => {
                           resolve(result)
                         })
