@@ -190,16 +190,19 @@ export default defineComponent({
             })
             return signedTx
           },
-          async signMessage(txObj: any, config: MorpherWalletConfig) {
-            console.log('signMessage', txObj, config)
-            console.log('hash', txObj[0])
+          async signMessage(tx: any, config: MorpherWalletConfig) {
+
+            let sign_hash = tx?.data || tx[0] || tx;
+            let message_standard = tx?.messageStandard || 'signPersonalMessage'
+            console.log('signMessage Hash', sign_hash, message_standard)
+            
 
             const signedTx = await new Promise((resolve, reject) => {
               //see if we are logged in?!
               try {
                 if (storeObject.keystore !== null) {
                   if (config?.confirm_message) {
-                    storeObject.messageDetails = txObj.data
+                    storeObject.messageDetails = sign_hash
                     storeObject.signResponse = null
                     routerObject.push('/signmsg').catch(() => undefined)
 
@@ -209,8 +212,8 @@ export default defineComponent({
                         if (storeObject.signResponse === 'confirm') {
                           storeObject.signResponse = null
                           if (storeObject.keystore !== null) {
-                            if (txObj?.messageStandard == 'signTypedMessage') {
-                              const data = JSON.parse(txObj.data)
+                            if (message_standard == 'signTypedMessage') {
+                              const data = JSON.parse(sign_hash)
 
                               const account = storeObject.keystore
 
@@ -223,7 +226,7 @@ export default defineComponent({
                                   reject(e)
                                 })
                             } else {
-                              const signedData = storeObject.keystore.sign({hash: txObj[0]})
+                              const signedData = storeObject.keystore.sign({hash: sign_hash})
                               resolve(signedData)
                             }
                           } else {
@@ -236,8 +239,8 @@ export default defineComponent({
                       }
                     }, 500)
                   } else {
-                    if (txObj?.messageStandard == 'signTypedMessage') {
-                      const data = JSON.parse(txObj.data)
+                    if (message_standard == 'signTypedMessage') {
+                      const data = JSON.parse(sign_hash)
 
                       const account = storeObject.keystore
 
@@ -251,7 +254,7 @@ export default defineComponent({
                         })
                     } else {
                       storeObject.keystore
-                        .sign({hash: txObj[0]})
+                        .sign({hash: sign_hash})
                         .then((result) => {
                           resolve(result)
                         })
@@ -262,7 +265,7 @@ export default defineComponent({
                   }
                 }
               } catch (e) {
-                console.log('signMessageError', txObj, e)
+                console.log('signMessageError', {tx, config}, e)
                 reject(e)
               }
             })
