@@ -1,7 +1,7 @@
 import { i18n } from '@/plugins/i18n'
 import download from 'downloadjs'
 
-import { SnackbarProgrammatic as Snackbar } from 'buefy'
+import type { BuefyNamespace } from 'buefy'
 import type { HDAccount, Hex } from 'viem'
 
 function getAccountsFromKeystore(keystore: HDAccount) {
@@ -33,7 +33,7 @@ function sortObject(object: any) {
 /*
  * Function uses to copy the given text to the clipboard. ses a hidden textArea to copy the text
  */
-const copyToClipboard = (text: string) => {
+const copyToClipboard = (text: string, buefy: BuefyNamespace) => {
   const textArea = document.createElement('textarea')
   // Place in top-left corner of screen regardless of scroll position.
   textArea.style.position = 'fixed'
@@ -65,8 +65,10 @@ const copyToClipboard = (text: string) => {
     textArea.style.display = 'none'
 
     if (successful) {
+      
       document.body.removeChild(textArea)
-      Snackbar.open({
+      
+      buefy.snackbar.open({
         duration: 5000,
         message: i18n.t('COPY_CLIPBOARD_SUCCESS').toString(),
         type: 'is-success',
@@ -77,7 +79,7 @@ const copyToClipboard = (text: string) => {
       return 'COPY_CLIPBOARD_SUCCESS'
     } else {
       document.body.removeChild(textArea)
-      Snackbar.open({
+      buefy.snackbar.open({
         duration: 5000,
         message: i18n.t('COPY_CLIPBOARD_FAIL').toString(),
         type: 'is-success',
@@ -88,8 +90,9 @@ const copyToClipboard = (text: string) => {
       return 'COPY_CLIPBOARD_FAIL'
     }
   } catch (err) {
+    console.log('err', err)
     document.body.removeChild(textArea)
-    Snackbar.open({
+    buefy.snackbar.open({
       duration: 5000,
       message: i18n.t('COPY_CLIPBOARD_FAIL').toString(),
       type: 'is-success',

@@ -183,14 +183,14 @@ export default defineComponent({
       this.$router.push('/').catch(() => undefined)
     },
     copySrcETHAddress(text: string) {
-      copyToClipboard(text)
+      copyToClipboard(text, this.$buefy)
       this.copyTextSrc = this.$t('common.ETH_ADDRESS_COPIED').toString()
       setTimeout(() => {
         this.copyTextSrc = this.$t('common.COPY_TO_CLIPBOARD').toString()
       }, 5000)
     },
     copyDestETHAddress(text: string) {
-      copyToClipboard(text)
+      copyToClipboard(text, this.$buefy)
       this.copyTextDest = this.$t('common.ETH_ADDRESS_COPIED').toString()
       setTimeout(() => {
         this.copyTextDest = this.$t('common.COPY_TO_CLIPBOARD').toString()

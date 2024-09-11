@@ -3,7 +3,7 @@
     <!-- <div id="appleid-signin" data-color="black" data-border="true" data-type="sign in"></div> -->
     <div class="control is-expanded">
       <button
-        class="button is-grey big-button outlined-button is-thick facebook-button transition-faster"
+        class="button big-button outlined-button facebook-button transition-faster"
         @click="doLogin"
         data-cy="vkontakteButton"
       >

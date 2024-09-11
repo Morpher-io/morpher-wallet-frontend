@@ -93,7 +93,7 @@ describe('Signup and Login', () => {
 
 		cy.get('[data-cy=logoutButton]').click();
 
-		cy.waitUntil(() => cy.contains('[data-cy=logInTitle]', 'Log In'));
+		cy.waitUntil(() => cy.contains('[data-cy=logInTitle]', 'Sign In'));
 		cy.contains('[data-cy=logInDescription]', 'Unlock your crypto wallet.');
 	});
 });

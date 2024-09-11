@@ -42,13 +42,18 @@
 
       <div class="control">
         <input
-          type="password"
+          :type="passwordIsVisible ? 'text' : 'password'"
           ref="unlock_password"
           class="input"
           name="walletPassword"
           v-model="walletPassword"
           @keypress="handleKeyPress"
+          :placeholder="$t('common.ENTER_PASSWORD')"
         />
+        <button class="password-toggle" v-on:click="togglePasswordVisibility" data-cy="password-toggle-button">
+              <img v-if="passwordIsVisible" class="image" src="@/assets/img/password-hide.svg" alt="Visible Button" />
+              <img v-else class="image" src="@/assets/img/password-show.svg" alt="Invisible Button" />
+						</button>
         <div v-if="showRecovery">
           <p class="help is-danger">
             {{ $t('auth.CANNOT_DECRYPT_PASSWORD') }}
@@ -59,7 +64,7 @@
     </div>
 
     <div class="error" v-if="logonError">
-      <p>⚠️ <span v-html="logonError"></span></p>
+      <p><img src="@/assets/img/warning.svg" alt="warning-icon"> <span v-html="logonError"></span></p>
     </div>
 
     <button
@@ -105,7 +110,8 @@ export default defineComponent({
       walletPassword: '',
       showRecovery: false,
       logonError: '',
-      loginUser: {} as any
+      loginUser: {} as any,
+      passwordIsVisible: false,
     }
   },
   computed: {
@@ -200,6 +206,9 @@ export default defineComponent({
           }
           // error
         })
+    },
+    togglePasswordVisibility() {
+      this.passwordIsVisible = !this.passwordIsVisible
     },
     async login() {
       if (

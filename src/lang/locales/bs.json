@@ -44,7 +44,7 @@
     "ENABLE_IN_SETTINGS": "Uključi u postavkama",
     "SUPPORT": "Podrška",
     "LOGOUT": "Odjavi se",
-    "SECURED_WALLET": "Osigurano sa AES | SHA-256 | PBKDF2"
+    "SECURED_WALLET": "Osigurano sa AES㆐SHA-256㆐PBKDF2"
   },
   "auth": {
     "LOGIN": "Prijavi se",
@@ -81,7 +81,7 @@
     "SEED_TIP": "Obavezno ostavite jedan razmak između svake riječi.",
     "DO_NOT_KNOW_KEYS": "Ne znate svoje ključeve?",
     "EXPORT_YOUR_WALLET": "Izvezite novčanik",
-    "PLEASE_EXPORT_YOUR_WALLET": "Molimo prvo <router-link to='{link}' class='login-router transition-faster'>izvezite novčanik</router-link>.",
+    "PLEASE_EXPORT_YOUR_WALLET": "Molimo prvo <a href='{link}' class='login-router transition-faster'>izvezite novčanik</a>.",
     "VERIFY_AND_DELETE": "Potvrdite i izbrišite",
     "DELETE_TIP": "Morate potvrditi vlasništvo pomoću seed fraze ili privatnog ključa prije nego što se vaš račun može ukloniti.",
     "WHAT_DELETE_TITLE": "Šta se briše?",

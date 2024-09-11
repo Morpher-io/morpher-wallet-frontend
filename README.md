@@ -5,7 +5,7 @@ Project Libraries:
     Vue 3 in Vite
     pinia store
     Viem
-    buefy / bulma
+    buefy
     vue-gtag - for handlin google gtag integration
     vue-i18n - for multi language support
     vue3-jazzicon - jazzicon generation

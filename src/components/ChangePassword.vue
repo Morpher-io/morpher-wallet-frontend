@@ -1,5 +1,10 @@
 <template>
   <div class="card">
+    <button @click="$router
+      .push(hideOldPassword ? '/login' : '/settings?email_password=true')
+      .catch(() => undefined)" tag="button" class="back-button">
+      <img alt="chevron-left" src="@/assets/img/back.svg">
+    </button>
     <div v-if="currentPage === 0">
       <h2 v-if="!hideOldPassword" class="title">{{ $t('password.CHANGE_PASSWORD_TITLE') }}</h2>
       <h2 v-else class="title">{{ $t('password.RESET_PASSWORD_TITLE') }}</h2>
@@ -7,130 +12,92 @@
         {{ $t('password.CHANGE_PASSWORD_DESCRIPTION') }}
       </h4>
       <h4 v-else class="subtitle">{{ $t('password.RESET_PASSWORD_DESCRIPTION') }}</h4>
-      <form v-on:submit.prevent="changePasswordExecute">
-        <div>
-          <div class="field" v-if="!hideOldPassword">
-            <label class="label">{{ $t('password.OLD_PASSWORD') }}</label>
-            <div class="control">
-              <input
-                type="password"
-                data-cy="oldPassword"
-                name="oldPassword"
-                class="input"
-                v-model="oldPassword"
-                @keypress="handleKeyPress"
-                ref="old_password"
-              />
-            </div>
+      
+        <div class="field" v-if="!hideOldPassword">
+          <label class="label">{{ $t('password.OLD_PASSWORD') }}</label>
+          <div class="control">
+            <input :type="passwordCurrentIsVisible ? 'text' : 'password'" data-cy="oldPassword" name="oldPassword" class="input" v-model="oldPassword"
+              @keypress="handleKeyPress" :placeholder="$t('common.ENTER_PASSWORD_CURRENT')" ref="old_password" />
+              <button class="password-toggle" v-on:click="toggleCurrentPasswordVisibility" data-cy="password-toggle-button">
+              <img v-if="passwordCurrentIsVisible" class="image" src="@/assets/img/password-hide.svg" alt="Visible Button" />
+              <img v-else class="image" src="@/assets/img/password-show.svg" alt="Invisible Button" />
+            </button>
           </div>
-          <div class="field">
-            <label class="label">{{ $t('common.NEW_PASSWORD') }}</label>
-            <div class="control">
-              <input
-                type="password"
-                name="newPassword"
-                data-cy="newPassword"
-                class="input password-input"
-                v-model="walletPassword"
-                @keypress="handleKeyPress"
-                ref="new_password"
-              />
-              <password
-                v-model="walletPassword"
-                :strength-meter-only="true"
-                :secure-length="8"
-                style="max-width: initial"
-              />
-              <div class="password-help">
-                <p>{{ $t('password.REQUIREMENTS') }}</p>
-                <ul class="items">
-                  <li
-                    :class="{
-                      done: passwordChecks.min === 'pass',
-                      fail: passwordChecks.min === 'fail'
-                    }"
-                  >
-                    {{ $t('password.MIN_CHARACTERS') }}
-                  </li>
-                  <li
-                    :class="{
-                      done: passwordChecks.lowercase === 'pass',
-                      fail: passwordChecks.lowercase === 'fail'
-                    }"
-                  >
-                    {{ $t('password.LOWERCASE_LETTER') }}
-                  </li>
-                  <li
-                    :class="{
-                      done: passwordChecks.uppercase === 'pass',
-                      fail: passwordChecks.uppercase === 'fail'
-                    }"
-                  >
-                    {{ $t('password.UPPERCASE_LETTER') }}
-                  </li>
-                  <li
-                    :class="{
-                      done: passwordChecks.number === 'pass',
-                      fail: passwordChecks.number === 'fail'
-                    }"
-                  >
-                    {{ $t('password.NUMBER') }}
-                  </li>
-                  <li
-                    :class="{
-                      done: passwordChecks.match === 'pass',
-                      fail: passwordChecks.match === 'fail'
-                    }"
-                  >
-                    {{ $t('password.PASSWORD_MATCH') }}
-                  </li>
-                </ul>
-              </div>
+        </div>
+        <div class="field">
+          <label class="label">{{ $t('common.NEW_PASSWORD') }}</label>
+          <div class="control">
+            <input :type="passwordIsVisible ? 'text' : 'password'" name="newPassword" data-cy="newPassword"
+              class="input password-input" v-model="walletPassword" @keypress="handleKeyPress"
+              :placeholder="$t('common.ENTER_PASSWORD_NEW')" ref="new_password" />
+            <button class="password-toggle" v-on:click="togglePasswordVisibility" data-cy="password-toggle-button">
+              <img v-if="passwordIsVisible" class="image" src="@/assets/img/password-hide.svg" alt="Visible Button" />
+              <img v-else class="image" src="@/assets/img/password-show.svg" alt="Invisible Button" />
+            </button>
+          </div>
+          <div>
+            <password-meter :passwordChecks="passwordChecks" style="max-width: initial" />
+            <div class="password-help">
+              <p><b>{{ $t('password.REQUIREMENTS') }}</b></p>
+              <ul class="items">
+                <li :class="{
+                  done: passwordChecks.min === 'pass',
+                  fail: passwordChecks.min === 'fail'
+                }">
+                  {{ $t('password.MIN_CHARACTERS') }}
+                </li>
+                <li :class="{
+                  done: passwordChecks.lowercase === 'pass',
+                  fail: passwordChecks.lowercase === 'fail'
+                }">
+                  {{ $t('password.LOWERCASE_LETTER') }}
+                </li>
+                <li :class="{
+                  done: passwordChecks.uppercase === 'pass',
+                  fail: passwordChecks.uppercase === 'fail'
+                }">
+                  {{ $t('password.UPPERCASE_LETTER') }}
+                </li>
+                <li :class="{
+                  done: passwordChecks.number === 'pass',
+                  fail: passwordChecks.number === 'fail'
+                }">
+                  {{ $t('password.NUMBER') }}
+                </li>
+                <li :class="{
+                  done: passwordChecks.match === 'pass',
+                  fail: passwordChecks.match === 'fail'
+                }">
+                  {{ $t('password.PASSWORD_MATCH') }}
+                </li>
+              </ul>
             </div>
           </div>
           <div class="field">
             <label class="label">{{ $t('common.CONFIRM_PASSWORD') }}</label>
             <div class="control">
-              <input
-                type="password"
-                class="input"
-                name="newPasswordRepeat"
-                data-cy="newPasswordRepeat"
-                v-model="walletPasswordRepeat"
-                @keypress="handleKeyPress"
-                ref="new_password_repeat"
-              />
+              <input :type="passwordConfirmIsVisible ? 'text' : 'password'" class="input" name="newPasswordRepeat" data-cy="newPasswordRepeat"
+                v-model="walletPasswordRepeat" @keypress="handleKeyPress" ref="new_password_repeat" />
+              <button class="password-toggle" v-on:click="toggleConfirmPasswordVisibility"
+                data-cy="password-toggle-button">
+                <img v-if="passwordConfirmIsVisible" class="image" src="@/assets/img/password-hide.svg"
+                  alt="Visible Button" />
+                <img v-else class="image" src="@/assets/img/password-show.svg" alt="Invisible Button" />
+              </button>
             </div>
           </div>
 
-          <div class="error mt-3" v-if="logonError">
-            <p>⚠️ <span data-cy="incorrectPassword" v-html="logonError"></span></p>
+          <div class="error" v-if="logonError">
+            <p><img src="@/assets/img/warning.svg" alt="warning-icon"> <span data-cy="incorrectPassword" v-html="logonError"></span></p>
           </div>
 
-          <button
-            class="button is-green big-button is-login transition-faster mt-5"
-            type="submit"
-            data-cy="passwordSubmit"
-          >
+          <button class="button is-green big-button is-login transition-faster mt-5" type="submit"
+            data-cy="passwordSubmit" @click="changePasswordExecute">
             <span class="text">{{ $t('common.UPDATE_PASSWORD') }}</span>
           </button>
 
-          <div class="mt-2">
-            <button
-              v-on:click="
-                $router
-                  .push(hideOldPassword ? '/login' : '/settings?email_password=true')
-                  .catch(() => undefined)
-              "
-              tag="button"
-              type="button"
-              class="button is-ghost is-blue big-button medium-text transition-faster"
-            >
-              <span class="text">{{ $t('common.CANCEL') }}</span>
-            </button>
-          </div>
         </div>
-      </form>
+     
     </div>
 
     <div v-if="currentPage === 1">
@@ -146,9 +113,9 @@
         <button
           @click="resetData"
           tag="button"
-          class="button outlined-button big-button transition-faster"
+          class="button is-green big-button is-login transition-faster"
         >
-          <span class="text">{{ $t('common.CLOSE') }}</span>
+          <span class="text">{{ $t('common.DONE') }}</span>
         </button>
       </div>
     </div>
@@ -157,21 +124,22 @@
 
 <script lang="ts">
 import { validateInput } from '@/utils/backupRestore'
-import Password from 'vue-simple-password-meter'
+import PasswordMeter from '@/components/PasswordMeter.vue'
 
 import { sha256 } from '@/utils/cryptoFunctions'
 import { Authenticated } from '@/mixins/authenticated'
 import { Global } from '@/mixins/global'
 import { getDictionaryValue } from '@/utils/dictionary'
 import { defineComponent } from 'vue'
+import type { TypePasswordCheck } from '@/types/global-types'
 
 export default defineComponent({
   components: {
-    Password
+    PasswordMeter
   },
   mixins: [Global, Authenticated],
   data() {
-    const passwordChecks: any = {
+    const passwordChecks: TypePasswordCheck = {
       min: '',
       uppercase: '',
       lowercase: '',
@@ -186,7 +154,10 @@ export default defineComponent({
       walletPassword: '',
       walletPasswordRepeat: '',
       logonError: '',
-      passwordChecks
+      passwordChecks,
+      passwordIsVisible: false,
+      passwordConfirmIsVisible: false,
+      passwordCurrentIsVisible: false,
     }
   },
   mounted() {
@@ -213,6 +184,7 @@ export default defineComponent({
       }
     },
     async changePasswordExecute() {
+      console.log('changePasswordExecute')
       this.logonError = ''
 
       this.passwordChecks = this.checkPassword(
@@ -224,7 +196,7 @@ export default defineComponent({
 
       if (
         Object.keys(this.passwordChecks).some(
-          (value: string) => this.passwordChecks[value] !== 'pass'
+          (value: string) => (this.passwordChecks as any)[value] !== 'pass'
         )
       ) {
         return
@@ -262,6 +234,15 @@ export default defineComponent({
 
           this.logonError = getDictionaryValue('')
         })
+    },
+    togglePasswordVisibility() {
+      this.passwordIsVisible = !this.passwordIsVisible
+    },
+    toggleCurrentPasswordVisibility() {
+      this.passwordCurrentIsVisible = !this.passwordCurrentIsVisible
+    },
+    toggleConfirmPasswordVisibility() {
+      this.passwordConfirmIsVisible = !this.passwordConfirmIsVisible
     },
     handleKeyPress(e: any) {
       const key = e.which || e.charCode || e.keyCode || 0
@@ -301,6 +282,9 @@ export default defineComponent({
         number: '',
         match: ''
       }
+
+      this.$router.push('/')
+
     },
     onPropertyChanged(value: any) {
       this.executeHiddenRecovery()
@@ -356,5 +340,9 @@ button.card-footer-item {
   border: 0;
   font-size: 1rem;
   line-height: 1.5;
+}
+ul {
+  list-style-type: none;
+  padding: 0;
 }
 </style>

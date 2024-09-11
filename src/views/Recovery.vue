@@ -1,7 +1,12 @@
 <template>
   <div>
+    <button @click="redirectUser" tag="button" class="back-button">
+      <img alt="chevron-left" src="@/assets/img/back.svg">
+    </button>
     <div v-if="currentPage === 0">
       <div v-if="store.email" class="container">
+        
+        
         <img
           src="@/assets/img/recover_wallet.svg"
           :alt="$t('images.RECOVER_WALLET')"
@@ -11,7 +16,7 @@
         <p class="subtitle">{{ $t('recovery.RECOVERY_DESCRIPTION') }}</p>
 
         <div class="error alert warning is-size-7" v-if="logonError">
-          <p data-cy="loginError">⚠️ <span v-html="logonError || '&nbsp;'"></span></p>
+          <p data-cy="loginError"><img src="@/assets/img/warning-triangle.svg" alt="warning-triangle"> <span v-html="logonError || '&nbsp;'"></span></p>
           <a
             v-if="showMore"
             href="https://support.morpher.com/en/article/recovering-your-wallet-forgot-password-snvhxu/"
@@ -33,12 +38,6 @@
         <div class="field is-grouped">
           <RecoverWalletVkontakte @setPassword="setPassword"></RecoverWalletVkontakte>
         </div>
-
-        <router-link to="/login">
-          <button class="button is-ghost is-blue big-button medium-text transition-faster">
-            <span>{{ $t('common.CANCEL') }}</span>
-          </button>
-        </router-link>
 
         <p class="is-size-7 mt-5 transition-faster">
           {{ $t('recovery.RECOVERY_NEED_HELP') }}&nbsp;
@@ -67,13 +66,14 @@
                 class="input"
                 name="newEmail"
                 v-model="newEmail"
+                :placeholder="$t('common.ENTER_EMAIL')"
                 @keypress="handleKeyPress"
               />
             </div>
           </div>
 
           <div class="error" v-if="logonError">
-            <p data-cy="loginError">⚠️ <span v-html="logonError"></span></p>
+            <p data-cy="loginError"><img src="@/assets/img/warning.svg" alt="warning-icon"> <span v-html="logonError"></span></p>
           </div>
 
           <button
@@ -83,11 +83,7 @@
           >
             <span class="text">{{ $t('common.CONTINUE') }}</span>
           </button>
-          <router-link to="/login">
-            <button class="button is-ghost is-blue big-button medium-text transition-faster">
-              <span class="text">{{ $t('common.BACK') }}</span>
-            </button>
-          </router-link>
+
         </form>
         <p class="is-size-7 mt-5 transition-faster">
           {{ $t('recovery.RECOVERY_NEED_HELP') }}&nbsp;
@@ -246,6 +242,14 @@ export default defineComponent({
       if (key === 13) {
         this.checkEmail()
       }
+    },
+    redirectUser() {
+      if (this.store.email) {
+        this.$router.push('/unlock')
+      } else {
+        this.$router.push('/login')
+      }
+      
     },
     async setPassword(data: any) {
       this.logonError = ''

@@ -21,7 +21,7 @@
         <LoginGoogle @processMethod="processMethod" :signIn="true"></LoginGoogle>
 
         <button
-          class="button is-grey big-button outlined-button is-thick facebook-button transition-faster"
+          class="button big-button outlined-button facebook-button transition-faster"
           @click="passwordSignin = true"
           data-cy="emailSignUpButton"
         >
@@ -32,7 +32,7 @@
         </button>
 
         <div class="error" v-if="logonError">
-          <p>⚠️ <span v-html="logonError"></span></p>
+          <p><img src="@/assets/img/warning.svg" alt="warning-icon"> <span v-html="logonError"></span></p>
         </div>
       </div>
       <!-- Signin with email/password -->
@@ -48,6 +48,7 @@
               name="walletEmail"
               data-cy="walletEmail"
               v-model="walletEmail"
+              :placeholder="$t('common.ENTER_EMAIL')"
             />
           </div>
         </div>
@@ -59,20 +60,26 @@
             <input
               ref="login_password"
               @keydown="checkKeyPress"
-              type="password"
+              :type="passwordIsVisible ? 'text' : 'password'"
               class="input password-input"
               name="walletPassword"
               data-cy="walletPassword"
               v-model="walletPassword"
+              :placeholder="$t('common.ENTER_PASSWORD')"
             />
-            <password
-              v-model="walletPassword"
-              :strength-meter-only="true"
-              :secure-length="8"
+
+            <button class="password-toggle" v-on:click="togglePasswordVisibility" data-cy="password-toggle-button">
+              <img v-if="passwordIsVisible" class="image" src="@/assets/img/password-hide.svg" alt="Visible Button" />
+              <img v-else class="image" src="@/assets/img/password-show.svg" alt="Invisible Button" />
+						</button>
+          </div>
+          <div>
+            <password-meter
+              :passwordChecks="passwordChecks"
               style="max-width: initial"
             />
             <div class="password-help">
-              <p>{{ $t('password.REQUIREMENTS') }}</p>
+              <p><b>{{ $t('password.REQUIREMENTS') }}</b></p>
               <ul class="items">
                 <li
                   :class="{
@@ -122,7 +129,7 @@
           <label class="label">{{ $t('common.CONFIRM_PASSWORD') }}</label>
           <div class="control">
             <input
-              type="password"
+              :type="passwordConfirmIsVisible ? 'text' : 'password'"
               ref="login_password_repeat"
               @keydown="checkKeyPress"
               class="input"
@@ -130,11 +137,16 @@
               data-cy="walletPasswordRepeat"
               v-model="walletPasswordRepeat"
             />
+            <button class="password-toggle" v-on:click="toggleConfirmPasswordVisibility" data-cy="password-toggle-button">
+              <img v-if="passwordConfirmIsVisible" class="image" src="@/assets/img/password-hide.svg" alt="Visible Button" />
+              <img v-else class="image" src="@/assets/img/password-show.svg" alt="Invisible Button" />
+						</button>
+
           </div>
         </div>
 
         <div class="error" v-if="logonError">
-          <p>⚠️ <span v-html="logonError"></span></p>
+          <p><img src="@/assets/img/warning.svg" alt="warning-icon"> <span v-html="logonError"></span></p>
         </div>
 
         <button
@@ -147,10 +159,8 @@
         </button>
       </div>
 
-      <div class="divider"></div>
-
       <div class="login-link">
-        <span>{{ $t('auth.ALREADY_HAVE_WALLET') }}</span>
+        <span>{{ $t('auth.ALREADY_HAVE_WALLET') }}&nbsp;</span>
         <router-link to="/login" class="login-router transition-faster">
           <span data-cy="logInButton">
             {{ $t('auth.LOGIN') }}
@@ -162,7 +172,8 @@
 </template>
 
 <script lang="ts">
-import Password from 'vue-simple-password-meter'
+
+import PasswordMeter from '@/components/PasswordMeter.vue'
 import { validateInput } from '@/utils/backupRestore'
 import { Global } from '@/mixins/global'
 import Recaptcha from '@/mixins/recaptcha'
@@ -171,16 +182,17 @@ import LoginGoogle from '@/components/LoginGoogleV2.vue'
 import LoginApple from '@/components/LoginApple.vue'
 import { sha256 } from '@/utils/cryptoFunctions'
 import { defineComponent } from 'vue'
+import type { TypePasswordCheck } from '@/types/global-types'
 
 export default defineComponent({
   components: {
-    Password,
+    PasswordMeter,
     LoginApple,
     LoginGoogle
   },
   mixins: [Global, Recaptcha],
   data() {
-    const passwordChecks: any = {
+    const passwordChecks: TypePasswordCheck = {
       min: '',
       uppercase: '',
       lowercase: '',
@@ -197,7 +209,9 @@ export default defineComponent({
       logonError: '',
       loginUser,
       passwordSignin: false,
-      passwordChecks
+      passwordChecks,
+      passwordIsVisible: false,
+      passwordConfirmIsVisible: false
     }
   },
   mounted() {
@@ -357,7 +371,7 @@ export default defineComponent({
 
         if (
           Object.keys(this.passwordChecks).some(
-            (value: string) => this.passwordChecks[value] !== 'pass'
+            (value: string) => (this.passwordChecks as any)[value] !== 'pass'
           )
         ) {
           return
@@ -451,6 +465,12 @@ export default defineComponent({
         this.passwordChecks,
         this.walletPasswordRepeat
       )
+    },
+    togglePasswordVisibility() {
+      this.passwordIsVisible = !this.passwordIsVisible
+    },
+    toggleConfirmPasswordVisibility() {
+      this.passwordConfirmIsVisible = !this.passwordConfirmIsVisible
     },
     handlePasswordRepeatChange(newValue: string) {
       this.passwordChecks = this.checkPassword(

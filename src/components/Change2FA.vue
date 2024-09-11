@@ -1,95 +1,66 @@
 <template>
   <div class="card">
     <div class="custom-card">
-      <div class="card-content">
-        <div class="is-flex">
-          <div class="details has-text-left mr-4">
-            <p class="has-text-weight-medium is-size-5">
-              <i class="fas fa-envelope" />
-              <span class="ml-2">{{ $t('common.EMAIL') }}</span>
-            </p>
+   
+        <div class="is-flex is-align-items-center">
+          <img src="@/assets/img/email_icon.svg">
+          <div class="has-text-left">
+            <p>{{ $t('common.EMAIL') }}</p>
+            <p data-cy="email2faConfirmed" class="enabled" v-if="store.twoFaRequired.email">{{ $t('2fa.VERIFICATION_ENABLED') }}</p>
+          </div>
+          <img v-if="!store.twoFaRequired.email" src="@/assets/img/switch-off.svg" class="switch" data-cy="emailToggle"  :disabled="
+            store.ipCountry == 'RU' ||
+            ((Number(ssoEmailError) == 3 || Number(ssoEmailError) == 6) &&
+              store.twoFaRequired.email == false)
+          " @click="setCurrentMethod('email', !store.twoFaRequired.email)">
+          <img v-else src="@/assets/img/switch-on.svg" class="switch" data-cy="emailToggle"   :disabled="
+            store.ipCountry == 'RU' ||
+            ((Number(ssoEmailError) == 3 || Number(ssoEmailError) == 6))
+          " @click="setCurrentMethod('email', !store.twoFaRequired.email)">
+      
+        
+        </div>
+        <div class="info is-text-small has-text-left">
+          <p v-if="!store.twoFaRequired.email && Number(ssoEmailError) == 3">
+            {{ $t('2fa.2_STEP_EMAIL_ERROR_GOOGLE') }}
+          </p>
+          <p v-else-if="!store.twoFaRequired.email && Number(ssoEmailError) == 6">
+            {{ $t('2fa.2_STEP_EMAIL_ERROR_APPLE') }}
+          </p>
+          <p v-else>{{ $t('2fa.2FA_EMAIL_DESCRIPTION') }}</p>
+          <p class="is-secondary">{{ store.email }}</p>
+        
 
-            <p v-if="!store.twoFaRequired.email && Number(ssoEmailError) == 3">
-              {{ $t('2fa.2_STEP_EMAIL_ERROR_GOOGLE') }}
-            </p>
-            <p v-else-if="!store.twoFaRequired.email && Number(ssoEmailError) == 6">
-              {{ $t('2fa.2_STEP_EMAIL_ERROR_APPLE') }}
-            </p>
-            <p v-else>{{ $t('2fa.2FA_EMAIL_DESCRIPTION') }}</p>
-          </div>
-          <div class="actions">
-            <button
-              :class="{
-                'button is-light-green is-small-button has-text-weight-bold transition-faster': true,
-                'is-light-danger': store.twoFaRequired.email
-              }"
-              :disabled="
-                store.ipCountry == 'RU' ||
-                ((Number(ssoEmailError) == 3 || Number(ssoEmailError) == 6) &&
-                  store.twoFaRequired.email == false)
-              "
-              data-cy="emailToggle"
-              @click="setCurrentMethod('email', !store.twoFaRequired.email)"
-            >
-              <span class="text">{{
-                !store.twoFaRequired.email ? $t('common.ENABLE') : $t('common.DISABLE')
-              }}</span>
-            </button>
-          </div>
-        </div>
-        <p class="has-text-left mt-2 is-size-7">{{ store.email }}</p>
       </div>
+      
     </div>
-    <div
-      data-cy="email2faConfirmed"
-      v-if="store.twoFaRequired.email"
-      class="recovery-active is-text-small"
-    >
-      <span class="icon">
-        <i class="fas fa-check-circle"></i>
-      </span>
-      {{ $t('2fa.VERIFICATION_ENABLED') }}
-    </div>
-    <div class="custom-card mt-5">
-      <div class="card-content">
-        <div class="is-flex">
-          <div class="details has-text-left mr-4">
-            <p class="has-text-weight-medium is-size-5">
-              <i class="fas fa-mobile-alt" />
-              <span class="ml-2">{{ $t('common.AUTHENTICATOR') }}</span>
-            </p>
+
+    <div class="custom-card">
+
+      <div class="is-flex is-align-items-center">
+          <img src="@/assets/img/authenticator-icon.svg">
+          <div class="has-text-left">
+            <p>{{ $t('common.AUTHENTICATOR') }}</p>
+            <p data-cy="authenticator2faConfirmed" class="enabled" v-if="store.twoFaRequired.authenticator">{{ $t('2fa.VERIFICATION_ENABLED') }}</p>
+          </div>
+          <img v-if="!store.twoFaRequired.authenticator" src="@/assets/img/switch-off.svg" data-cy="authenticatorToggle" class="switch"  
+           @click="setCurrentMethod('authenticator', !store.twoFaRequired.authenticator)">
+          <img v-else src="@/assets/img/switch-on.svg"  data-cy="authenticatorToggle" class="switch"  
+           @click="setCurrentMethod('authenticator', !store.twoFaRequired.authenticator)">
+      
+        
+        </div>
+
+        <div class="info is-text-small has-text-left">
             <p>{{ $t('2fa.2FA_AUTH_DESCRIPTION') }}</p>
-          </div>
-          <div class="actions">
-            <button
-              :class="{
-                'button is-light-green is-small-button has-text-weight-bold transition-faster': true,
-                'is-light-danger': store.twoFaRequired.authenticator
-              }"
-              data-cy="authenticatorToggle"
-              @click="setCurrentMethod('authenticator', !store.twoFaRequired.authenticator)"
-            >
-              <span class="text">{{
-                !store.twoFaRequired.authenticator ? $t('common.ENABLE') : $t('common.DISABLE')
-              }}</span>
-            </button>
-          </div>
+
         </div>
+    </div>
+    
+
+    <div  class="alert warning has-text-left is-flex">
+        <img src="@/assets/img/warning-triangle.svg" alt="warning-triangle"><div>{{ $t('2fa.VERIFICATION_LOSE') }}</div>
       </div>
-    </div>
-    <div
-      data-cy="authenticator2faConfirmed"
-      v-if="store.twoFaRequired.authenticator"
-      class="recovery-active is-text-small"
-    >
-      <span class="icon">
-        <i class="fas fa-check-circle"></i>
-      </span>
-      {{ $t('2fa.VERIFICATION_ENABLED') }}
-    </div>
-    <div class="alert warning mt-5 is-size-7 has-text-left">
-      ⚠ {{ $t('2fa.VERIFICATION_LOSE') }}
-    </div>
   </div>
 </template>
 

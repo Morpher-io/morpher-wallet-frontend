@@ -1,26 +1,18 @@
 <template>
   <div class="container">
+    <button @click="redirectUser" tag="button" class="back-button">
+      <img alt="chevron-left" src="@/assets/img/back.svg">
+    </button>
     <div v-if="currentPage === 0">
-      <div class="title-container has-text-left">
-        <button
-          @click="redirectUser"
-          tag="button"
-          class="button is-grey big-button outlined-button is-thick transition-faster is-icon-only"
-        >
-          <span class="icon is-small">
-            <i class="fas fa-chevron-left"></i>
-          </span>
-        </button>
-        <h2 class="title ml-3">{{ $t('delete.DELETE_ACCOUNT_TITLE') }}</h2>
-      </div>
-      <div class="divider just-space" />
-      <p class="has-text-left reset-line-height">
+
+      <h2 class="title ml-3">{{ $t('delete.DELETE_ACCOUNT_TITLE') }}</h2>
+      
+      <p class="reset-line-height">
         <span
           class="has-text-weight-medium"
+          @click="$router.push('/settings/keys')"
           v-html="
-            $t('delete.PLEASE_EXPORT_YOUR_WALLET', {
-              link: '/settings/keys'
-            })
+            $t('delete.PLEASE_EXPORT_YOUR_WALLET')
           "
         ></span>
         {{ $t('delete.DELETE_TIP') }}
@@ -36,17 +28,15 @@
         </button>
       </div>
 
-      <div class="divider" />
+      <div class="has-text-left">
+        <p class="info-title">{{ $t('delete.WHAT_DELETE_TITLE') }}</p>
+        <p class="info-text">{{ $t('delete.WHAT_DELETE_DESCRIPTION') }}</p>
 
-      <div class="has-text-left mt-5 reset-line-height">
-        <p class="has-text-weight-medium">{{ $t('delete.WHAT_DELETE_TITLE') }}</p>
-        <p>{{ $t('delete.WHAT_DELETE_DESCRIPTION') }}</p>
+        <p class="info-title">{{ $t('delete.DOES_DELETE_WALLET_TITLE') }}</p>
+        <p class="info-text">{{ $t('delete.DOES_DELETE_WALLET_DESCRIPTION') }}</p>
 
-        <p class="has-text-weight-medium mt-2">{{ $t('delete.DOES_DELETE_WALLET_TITLE') }}</p>
-        <p>{{ $t('delete.DOES_DELETE_WALLET_DESCRIPTION') }}</p>
-
-        <p class="has-text-weight-medium mt-2">{{ $t('delete.WHAT_FUNDS_TITLE') }}</p>
-        <p>{{ $t('delete.WHAT_FUNDS_DESCRIPTION') }}</p>
+        <p class="info-title">{{ $t('delete.WHAT_FUNDS_TITLE') }}</p>
+        <p class="info-text">{{ $t('delete.WHAT_FUNDS_DESCRIPTION') }}</p>
       </div>
     </div>
     <ConfirmAccess
@@ -162,12 +152,18 @@ export default defineComponent({
 </script>
 
 <style lang="scss" scoped>
-.title-container {
-  display: flex;
-  align-items: center;
+.info-title {
+  font-weight: 700;
+  padding-top: 16px;
+  padding-bottom: 0;
+  margin: 0;
+}
+.info-text {
+  font-size: 12px;
 
-  .title {
-    margin: 0;
-  }
+  padding-top: 2px;
+  padding-bottom: 0;
+  margin: 0;
+
 }
 </style>

@@ -19,6 +19,7 @@
                   name="newEmail"
                   ref="new_email"
                   v-model="newEmail"
+                  :placeholder="$t('common.ENTER_EMAIL')"
                   @keypress="handleKeyPress"
                 />
               </div>
@@ -33,6 +34,7 @@
                   name="password"
                   ref="new_password"
                   v-model="password"
+                  :placeholder="$t('common.ENTER_PASSWORD')"
                   @keypress="handleKeyPress"
                 />
               </div>
@@ -40,8 +42,8 @@
           </div>
         </div>
 
-        <div class="error mt-3" v-if="logonError">
-          <p>⚠️ <span v-html="logonError"></span></p>
+        <div class="error" v-if="logonError">
+          <p><img src="@/assets/img/warning.svg" alt="warning-icon"> <span v-html="logonError"></span></p>
         </div>
 
         <div class="mt-5">
@@ -62,15 +64,9 @@
               })
             "
           >
-            <span class="text confirm-button">{{ $t('common.UPDATE_EMAIL') }}</span>
+            <span class="text">{{ $t('common.UPDATE_EMAIL') }}</span>
           </button>
-          <button
-            v-on:click="$router.push('/settings?email_password=true').catch(() => undefined)"
-            tag="button"
-            class="button is-ghost is-blue big-button medium-text transition-faster"
-          >
-            <span class="text">{{ $t('common.CANCEL') }}</span>
-          </button>
+
         </div>
       </div>
     </div>
@@ -196,8 +192,3 @@ export default defineComponent({
 })
 </script>
 
-<style lang="scss" scoped>
-.confirm-button {
-  font-size: 18px;
-}
-</style>

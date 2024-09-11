@@ -1,20 +1,12 @@
 <template>
   <div class="container">
-    <div class="title-container has-text-left">
-      <button
-        @click="redirectUser"
-        tag="button"
-        class="button is-grey big-button outlined-button is-thick transition-faster is-icon-only"
-      >
-        <span class="icon is-small">
-          <i class="fas fa-chevron-left"></i>
-        </span>
-      </button>
+    <button @click="redirectUser" tag="button" class="back-button">
+      <img alt="chevron-left" src="@/assets/img/back.svg">
+    </button>
+
       <h2 v-if="!isEmailPasswordPage" class="title ml-3">{{ $t('settings.SETTINGS_TITLE') }}</h2>
       <h2 v-if="isEmailPasswordPage" class="title ml-3">{{ $t('settings.EMAIL_AND_PASSWORD') }}</h2>
-    </div>
 
-    <div class="divider just-space" />
 
     <div v-if="!isEmailPasswordPage" class="settings-data">
       <div
@@ -23,12 +15,12 @@
         class="settings-link is-flex is-align-items-center"
         @click="changeActive('email_password')"
       >
-        <i class="fas fa-user-circle" />
+        <img src="@/assets/img/email-password.svg" />
         <span class="text">
           {{ $t('settings.EMAIL_AND_PASSWORD') }}
         </span>
         <span class="icon">
-          <i class="fas fa-chevron-right" />
+          <img src="@/assets/img/chevron-right.svg" alt="right-chevron">
         </span>
       </div>
 
@@ -38,12 +30,15 @@
         class="settings-link is-flex is-align-items-center"
         @click="changeActive('recovery')"
       >
-        <i class="fas fa-life-ring" />
+      <img src="@/assets/img/trusted-account.svg" />
         <span class="text">
           {{ $t('settings.TRUSTED_ACCOUNT') }}
         </span>
+
         <span class="icon">
-          <i class="fas fa-chevron-right" />
+          <img v-if="noRecoveryMethods" src="@/assets/img/warning.svg" alt="warning-icon">
+
+          <img src="@/assets/img/chevron-right.svg" alt="right-chevron">
         </span>
       </div>
 
@@ -53,12 +48,14 @@
         class="settings-link is-flex is-align-items-center"
         @click="changeActive('2FA')"
       >
-        <i class="fas fa-check-double" />
+        
+        <img src="@/assets/img/2fa-verification.svg" />
         <span class="text">
           {{ $t('settings.2_STEP_VERIFICATION') }}
         </span>
         <span class="icon">
-          <i class="fas fa-chevron-right" />
+          <img v-if="!twoFactorActive && !twoFactorEmailActive" src="@/assets/img/warning.svg" alt="warning-icon">
+          <img src="@/assets/img/chevron-right.svg" alt="right-chevron">
         </span>
       </div>
 
@@ -68,12 +65,12 @@
         data-cy="exportWalletButton"
         @click="changeActive('keys')"
       >
-        <i class="fas fa-file-download" />
+        <img src="@/assets/img/export-wallet.svg" />
         <span class="text">
           {{ $t('settings.EXPORT_WALLET') }}
         </span>
         <span class="icon">
-          <i class="fas fa-chevron-right" />
+          <img src="@/assets/img/chevron-right.svg" alt="right-chevron">
         </span>
       </div>
 
@@ -83,12 +80,12 @@
         class="settings-link is-flex is-align-items-center"
         @click="changeActive('delete')"
       >
-        <i class="fas fa-ban" />
+      <img src="@/assets/img/delete-account.svg" />
         <span class="text">
           {{ $t('settings.DELETE_ACCOUNT') }}
         </span>
         <span class="icon">
-          <i class="fas fa-chevron-right"></i>
+          <img src="@/assets/img/chevron-right.svg" alt="right-chevron">
         </span>
       </div>
     </div>
@@ -99,7 +96,7 @@
         class="settings-link email-password is-flex is-align-items-center reset-cursor"
       >
         <div class="data">
-          <p class="has-text-weight-bold">{{ $t('common.EMAIL') }}</p>
+          <p class="has-text-weight-bold"><b>{{ $t('common.EMAIL') }}</b></p>
           <p>{{ store.email }}</p>
         </div>
         <div class="link">
@@ -108,7 +105,7 @@
             data-cy="emailChangeButton"
             @click="changeActive('email')"
           >
-            <i class="fas fa-pen-square" />
+          <i class="fas fa-pen-square" style="font-size: 18px"></i>
           </div>
         </div>
       </div>
@@ -118,7 +115,7 @@
         class="settings-link email-password is-flex is-align-items-center reset-cursor"
       >
         <div class="data">
-          <p class="has-text-weight-bold">{{ $t('common.PASSWORD') }}</p>
+          <p class="has-text-weight-bold"><b>{{ $t('common.PASSWORD') }}</b></p>
           <p>********</p>
         </div>
         <div class="link">
@@ -127,7 +124,7 @@
             data-cy="passwordChangeButton"
             @click="changeActive('password')"
           >
-            <i class="fas fa-pen-square" />
+            <i class="fas fa-pen-square" style="font-size: 18px"></i>
           </div>
         </div>
       </div>
@@ -155,7 +152,10 @@ export default defineComponent({
   data() {
     return {
       activePage: '',
-      isEmailPasswordPage: false
+      isEmailPasswordPage: false,
+      noRecoveryMethods: false,
+      twoFactorActive: false,
+      twoFactorEmailActive: false,
     }
   },
   mounted() {
@@ -163,6 +163,16 @@ export default defineComponent({
       this.isEmailPasswordPage = true
       this.activePage = 'email_password'
       this.$router.replace({ query: {} })
+    }
+
+    if (!this.store.recoveryMethods.find((method: any) => Number(method.id) !== 1)) {
+      this.noRecoveryMethods = true
+    }
+    if (this.store.twoFaRequired.authenticator) {
+      this.twoFactorActive = true
+    }
+    if (this.store.twoFaRequired.email) {
+      this.twoFactorEmailActive = true
     }
   },
   methods: {

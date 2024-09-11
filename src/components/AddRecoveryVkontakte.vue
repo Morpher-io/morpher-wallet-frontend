@@ -2,7 +2,7 @@
   <div class="field">
     <div class="control is-expanded">
       <button
-        class="button is-grey big-button outlined-button is-thick facebook-button transition-faster"
+        class="button big-button outlined-button facebook-button transition-faster"
         @click="doLogin"
         v-if="!hasRecoveryMethod"
         data-cy="vkontakteButton"
@@ -14,24 +14,24 @@
       </button>
     </div>
 
-    <div class="control is-expanded has-text-centered" v-if="hasRecoveryMethod">
-      <button class="button big-button is-thick transition-faster vk-button" @click="doDelete">
-        <span class="icon img">
-          <img src="@/assets/img/vk_logo_white.svg" alt="VKontakte Logo" />
-        </span>
-        <span class="text">{{ $t('recovery.REVOKE_ACCESS') }}</span>
-      </button>
-      <div class="recovery-active is-text-small">
-        <span class="icon">
-          <i class="fas fa-check-circle"></i>
-        </span>
-        {{
-          $t('recovery.RECOVERY_ACTIVE', {
-            currentMethod: 'VKontakte'
-          })
-        }}
+    <div class="recovery-active" v-if="hasRecoveryMethod">
+
+      <img src="@/assets/img/vk_logo.svg" alt="VKontakte Logo" />
+      <div style="justify-self: stretch;">
+        <p>{{ $t('recovery.VKONTAKTE_RECOVERY')}}</p>
+        <p class="enable-tag">{{ $t('common.ENABLED') }}</p>
       </div>
+
+      <div class="logon">
+
+            <img @click="doDelete" src="@/assets/img/switch-on.svg">
+          
+        
+      </div>
+
+
     </div>
+
   </div>
 </template>
 

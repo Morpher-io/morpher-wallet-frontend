@@ -1,5 +1,10 @@
 <template>
   <div class="container">
+
+    <button @click="logout()" tag="button" class="back-button">
+      <img alt="chevron-left" src="@/assets/img/back.svg">
+    </button>
+
     <vue-recaptcha
       ref="recaptcha"
       size="invisible"
@@ -65,6 +70,7 @@
             id="emailCode"
             data-cy="emailCode"
             v-model="emailCode"
+            :placeholder="$t('common.ENTER_CODE_EMAIL')"
             ref="email_code"
             @keypress="handleKeyPress"
           />
@@ -88,7 +94,7 @@
       </div>
 
       <div class="error" v-if="logonError">
-        <p>⚠️ <span v-html="logonError"></span></p>
+        <p><img src="@/assets/img/warning.svg" alt="warning-icon"> <span v-html="logonError"></span></p>
       </div>
 
       <button
@@ -99,13 +105,7 @@
         <span class="text">{{ $t('common.SUBMIT') }}</span>
       </button>
 
-      <button
-        v-on:click="logout()"
-        tag="button"
-        class="button is-ghost is-blue big-button medium-text transition-faster"
-      >
-        <span class="text">{{ $t('common.CANCEL') }}</span>
-      </button>
+   
     </form>
 
     <p class="mt-5 transition-faster">

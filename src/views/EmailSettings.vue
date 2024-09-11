@@ -1,5 +1,8 @@
 <template>
   <div class="container">
+    <button @click="redirectUser" tag="button" class="back-button">
+      <img alt="chevron-left" src="@/assets/img/back.svg">
+    </button>
     <h2 class="title">{{ $t('email.EMAIL_SETTINGS_TITLE') }}</h2>
     <h4 class="subtitle">{{ $t('email.EMAIL_SETTINGS_DESCRIPTION') }}</h4>
     <ChangeEmail v-if="currentPage === 0" @setNewData="setNewData" :error="logonError" />
@@ -21,9 +24,9 @@
         <button
           @click="resetData"
           tag="button"
-          class="button outlined-button big-button transition-faster"
+          class="button is-green big-button is-login transition-faster"
         >
-          <span class="text">{{ $t('common.CLOSE') }}</span>
+          <span class="text">{{ $t('common.DONE') }}</span>
         </button>
       </div>
     </div>
@@ -112,7 +115,8 @@ export default defineComponent({
       if (this.currentPage > 0) this.currentPage -= 1
     },
     redirectUser() {
-      this.$router.push('/settings').catch(() => undefined)
+     
+      this.$router.push('/settings?email_password=true').catch(() => undefined)
     },
     resetData() {
       this.currentPage = 0

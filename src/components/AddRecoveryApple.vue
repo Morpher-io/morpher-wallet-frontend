@@ -3,10 +3,10 @@
     <!-- <div id="appleid-signin" data-color="black" data-border="true" data-type="sign in"></div> -->
     <div class="control is-expanded" v-if="!hasRecoveryMethod">
       <button
-        class="button is-grey big-button outlined-button is-thick facebook-button transition-faster"
+        class="button big-button outlined-button facebook-button transition-faster"
         @click="doLogin"
         v-if="!hasRecoveryMethod"
-        data-cy="vkontakteButton"
+        data-cy="appleButton"
       >
         <span class="icon img">
           <img src="@/assets/img/apple_logo.svg" alt="Apple Logo" />
@@ -14,31 +14,26 @@
         <span>Apple</span>
       </button>
     </div>
-    <div v-if="hasRecoveryMethod" class="has-text-centered">
-      <div class="control is-expanded" v-if="hasRecoveryMethod">
-        <button
-          class="button is-grey big-button outlined-button is-thick facebook-button transition-faster"
-          @click="doLogin"
-          v-if="hasRecoveryMethod"
-          data-cy="vkontakteButton"
-        >
-          <span class="icon img">
-            <img src="@/assets/img/apple_logo.svg" alt="Apple Logo" />
-          </span>
-          <span>Revoke Access</span>
-        </button>
+
+    <div class="recovery-active" v-if="hasRecoveryMethod">
+
+      <img src="@/assets/img/apple_logo.svg" alt="Apple Logo" />
+      <div style="justify-self: stretch;">
+        <p>{{ $t('recovery.APPLE_RECOVERY')}}</p>
+        <p class="enable-tag">{{ $t('common.ENABLED') }}</p>
       </div>
-      <div class="recovery-active is-text-small">
-        <span class="icon">
-          <i class="fas fa-check-circle"></i>
-        </span>
-        {{
-          $t('recovery.RECOVERY_ACTIVE', {
-            currentMethod: 'Apple'
-          })
-        }}
+
+      <div class="logon">
+
+            <img @click="doLogin" src="@/assets/img/switch-on.svg">
+          
+        
       </div>
+
+
     </div>
+
+
   </div>
 </template>
 

@@ -15,6 +15,7 @@ import KeysSettings from '../views/KeysSettings.vue'
 import RecoverySettings from '../views/RecoverySettings.vue'
 import DeleteSettings from '../views/DeleteSettings.vue'
 import { useWalletStore } from '@/stores/wallet'
+import { isConditionalExpression } from 'typescript'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -133,6 +134,8 @@ const router = createRouter({
 router.beforeEach(async (to, from, next) => {
   const store = useWalletStore()
   if (to.matched.some((record) => record.meta.requiresAuth)) {
+    
+    
     if (to.query && to.query.code) {
       next()
       return
@@ -152,13 +155,15 @@ router.beforeEach(async (to, from, next) => {
       store.setRedirect(to.path)
     }
 
-    if (store.twoFaRequired) {
+    if (store.twoFaRequired && (store.twoFaRequired.email || store.twoFaRequired.authenticator)) {
       next('/2fa')
       return
     }
 
-    await store.loadEncryptedSeed()
+    
     if (store.email) {
+      store.loadEncryptedSeed()
+
       next('/unlock')
       return
     }

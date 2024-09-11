@@ -13,14 +13,15 @@
           type="string"
           inputmode="numeric"
           class="input"
+          :placeholder="$t('common.ENTER_CODE')"
           v-model="authenticatorCode"
           @keypress="handleKeyPress"
         />
       </div>
     </div>
 
-    <div class="error mt-3" v-if="logonError">
-      <p>⚠️ <span data-cy="2faEmailError" v-html="logonError"></span></p>
+    <div class="error" v-if="logonError">
+      <p><img src="@/assets/img/warning.svg" alt="warning-icon"> <span data-cy="2faEmailError" v-html="logonError"></span></p>
     </div>
 
     <button
@@ -31,12 +32,7 @@
     >
       <span class="text">{{ $t('common.SUBMIT') }}</span>
     </button>
-    <button
-      v-on:click="pageBack()"
-      class="button is-ghost is-blue big-button medium-text transition-faster"
-    >
-      <span class="text">{{ $t('common.CANCEL') }}</span>
-    </button>
+
   </div>
 </template>
 

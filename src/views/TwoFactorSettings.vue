@@ -1,19 +1,13 @@
 <template>
   <div class="container">
-    <div v-if="currentPage === 0" class="title-container has-text-left">
-      <button
-        @click="redirectUser"
-        tag="button"
-        class="button is-grey big-button outlined-button is-thick transition-faster is-icon-only"
-      >
-        <span class="icon is-small">
-          <i class="fas fa-chevron-left"></i>
-        </span>
-      </button>
-      <h2 class="title ml-3">{{ $t('settings.2_STEP_VERIFICATION') }}</h2>
-    </div>
+    <button @click="redirectUser" tag="button" class="back-button">
+      <img alt="chevron-left" src="@/assets/img/back.svg">
+    </button>
+
+    
 
     <div v-if="currentPage === 0">
+      <h2 class="title ml-3">{{ $t('settings.2_STEP_VERIFICATION') }}</h2>
       <div class="divider just-space" />
 
       <Change2FA @setCurrentMethod="setCurrentMethod" :ssoEmailError="ssoEmailError?.toString()" />
@@ -49,26 +43,29 @@
         </p>
 
         <div v-if="!isEnabling" class="alert warning mt-3 is-size-7 has-text-left mb-5">
-          ⚠ {{ $t('2fa.2_STEP_REMOVED_WARNING') }}
+          <img src="@/assets/img/warning-triangle.svg" alt="warning-triangle"><div>{{ $t('2fa.2_STEP_REMOVED_WARNING') }}</div>
         </div>
 
+        
         <button
           @click="resetData"
           tag="button"
-          class="button outlined-button big-button transition-faster"
+          data-cy="closeButton"
+          class="button is-green big-button is-login transition-faster"
         >
-          <span data-cy="closeButton" class="text">{{ $t('common.CLOSE') }}</span>
+          <span class="text">{{ $t('common.DONE') }}</span>
         </button>
 
-        <div v-if="isEnabling">
+
+        <!-- <div v-if="isEnabling">
           <div class="divider"></div>
           <p class="has-text-left has-text-weight-bold mb-0">{{ $t('2fa.KYC_TITLE') }}</p>
           <p class="has-text-left subtitle mt-0">{{ $t('2fa.KYC_DESCRIPTION') }}</p>
-        </div>
+        </div> -->
       </div>
     </div>
-    <div class="error mt-3" v-if="updateError">
-      <p>⚠️ <span v-html="updateError"></span></p>
+    <div class="error" v-if="updateError">
+      <p><img src="@/assets/img/warning.svg" alt="warning-icon"> <span v-html="updateError"></span></p>
     </div>
   </div>
 </template>
@@ -125,6 +122,7 @@ export default defineComponent({
         return
       }
     }
+
   },
   methods: {
     async submitChange(type: 'email' | 'authenticator') {
@@ -204,7 +202,12 @@ export default defineComponent({
       return false
     },
     redirectUser() {
-      this.$router.push('/settings').catch(() => undefined)
+      if (this.currentPage === 0) {
+        this.$router.push('/settings').catch(() => undefined)
+      } else {
+        this.currentPage = 0
+      }
+      
     },
     pageBack() {
       if (this.currentMethod === 'authenticator' && !this.authenticator && this.currentPage === 2) {

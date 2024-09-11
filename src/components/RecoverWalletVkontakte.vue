@@ -2,7 +2,7 @@
   <div class="control is-expanded">
     <button
       type="button"
-      class="button is-grey big-button outlined-button is-thick transition-faster"
+      class="button big-button outlined-button transition-faster"
       @click="doLogin"
     >
       <span class="icon img">

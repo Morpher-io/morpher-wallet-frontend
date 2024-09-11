@@ -3,7 +3,7 @@
     <HFaceBookLogin v-slot="fbLogin" :app-id="clientId" :version="'v18.0'" @onSuccess="onLogin">
       <button
         @click="fbLogin.initFBLogin"
-        class="button is-grey big-button outlined-button is-thick transition-faster facebook-button"
+        class="button big-button outlined-button transition-faster facebook-button"
       >
         <span class="is-flex is-align-items-center" slot="login">
           <span class="icon img">

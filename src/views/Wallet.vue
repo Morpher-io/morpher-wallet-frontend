@@ -1,5 +1,8 @@
 <template>
   <div class="container">
+
+    <h2 data-cy="signUpTitle" class="title">{{ $t('common.MORPHER_WALLET') }}</h2>
+
     <div class="user-details settings-data">
       <div class="details">
         <div class="is-flex has-text-left">
@@ -8,145 +11,88 @@
           <div class="ml-3">
             <p class="medium-text has-text-weight-medium">
               <span class="important-font"> {{ formatEthAddress(store.accounts[0]) }}</span>
-              <span class="copy-icon" @click="copyETHAddress(store.accounts[0])"
-                ><i class="fas fa-copy"
-              /></span>
+              <span class="copy-icon" @click="copyETHAddress(store.accounts[0])">
+                <img alt="copy-image" src="@/assets/img/copy.svg">
+              </span>
             </p>
             <p data-cy="currentEmail">{{ store.email }}</p>
           </div>
         </div>
         <div class="buttons horizontal-buttons mt-3">
-          <button
+           <button
             tag="button"
             :class="{ 'cursor-not-allowed': !isIframe() }"
             @click="sendInApp"
-            class="button is-light-purple is-small-button has-text-weight-bold transition-faster"
+            style="position: relative;"
+            class="button big-button outlined-button transition-faster"
           >
-            <span class="icon is-small">
-              <i class="fas fa-paper-plane"></i>
-            </span>
+            <img alt="send token" src="@/assets/img/send.svg">
+
             <span data-cy="sendButton" class="text">{{ $t('common.SEND') }}</span>
             <div class="tooltip" v-if="!isIframe()">
               {{ $t('common.SEND_DESCRIPTION') }}
-            </div>
+            </div> 
           </button>
-          <button
+          
+           <button
             @click="$router.push('/settings').catch()"
-            class="button is-light-blue is-small-button has-text-weight-bold transition-faster"
+            class="button big-button outlined-button transition-faster"
           >
-            <span class="icon is-small">
-              <i class="fas fa-cog"></i>
-            </span>
+            <img alt="settings cog" src="@/assets/img/settings.svg">
             <span data-cy="settingsButton">{{ $t('settings.SETTINGS_TITLE') }}</span>
-          </button>
-        </div>
-      </div>
+          </button>  
+        </div> 
+      </div> 
     </div>
 
-    <p
-      class="mt-5 has-text-weight-medium is-size-6 is-flex is-align-items-center important-font has-text-left"
-    >
-      <i class="fas fa-life-ring is-size-6 mr-1"></i>
-      {{ noRecoveryMethods ? $t('common.RECOVERY_MISSING') : $t('common.RECOVERY') }}
-    </p>
+    
+    <div class="wallet-issues has-text-left" v-if="issueCount > 0">
+      <div class="issue-title is-flex is-align-items-center">
+        <img src="@/assets/img/warning-triangle.svg" alt="warning-triangle"> {{ issueCount }} {{ $t('settings.ISSUES_FOUND')}}
+      </div>
+      <ul>
+        <li v-if="noRecoveryMethods">
+          {{ $t('settings.ADD_TRUSTED_ACCOUNT') }}.
+        </li>
 
-    <div class="mt-1 user-details settings-data">
-      <div v-if="noRecoveryMethods" class="details has-text-left">
-        <p v-html="$t('recovery.ACCOUNT_AT_RISK')"></p>
-        <router-link to="/settings/recovery">
-          <button
-            class="button is-light-green is-small-button has-text-weight-bold transition-faster mt-3"
-          >
-            <span class="text smaller-font">{{ $t('recovery.ADD_ACCOUNT_RECOVERY') }}</span>
-          </button>
+        <li v-if="!twoFactorActive && !twoFactorEmailActive">
+          {{ $t('settings.ADD_2FA') }}.
+        </li>
+
+      </ul>
+ 
+      <div>
+        <router-link to="/settings/">
+          {{ $t('settings.GO_TO_SETTINGS') }}
         </router-link>
       </div>
-      <div v-else class="details has-text-left">
-        <div class="protection-enabled mt-1" v-if="whatRecovery.google">
-          <span class="icon img mr-1">
-            <img src="@/assets/img/google_logo.svg" alt="Google Logo" />
-          </span>
-          <p class="mr-1">{{ $t('recovery.GOOGLE_RECOVERY') }}</p>
-          <span class="enabled">{{ $t('common.ENABLED') }}</span>
-        </div>
-        <div class="protection-enabled mt-1" v-if="whatRecovery.apple">
-          <span class="icon img mr-1">
-            <img src="@/assets/img/apple_logo.svg" alt="Apple Logo" />
-          </span>
-          <p class="mr-1">{{ $t('recovery.APPLE_RECOVERY') }}</p>
-          <span class="enabled">{{ $t('common.ENABLED') }}</span>
-        </div>
-        <div class="protection-enabled mt-1" v-if="whatRecovery.facebook">
-          <span class="icon img mr-1">
-            <img src="@/assets/img/fb_logo.svg" alt="Facebook Logo" />
-          </span>
-          <p class="mr-1">{{ $t('recovery.FACEBOOK_RECOVERY') }}</p>
-          <span class="enabled">{{ $t('common.ENABLED') }}</span>
-        </div>
-        <div class="protection-enabled mt-1" v-if="whatRecovery.vkontakte">
-          <span class="icon img mr-1">
-            <img src="@/assets/img/vk_logo.svg" alt="VKontakte Logo" />
-          </span>
-          <p class="mr-1">{{ $t('recovery.VKONTAKTE_RECOVERY') }}</p>
-          <span class="enabled">{{ $t('common.ENABLED') }}</span>
-        </div>
-      </div>
     </div>
-
-    <p
-      class="mt-4 has-text-weight-medium is-size-6 is-flex is-align-items-center important-font has-text-left"
-    >
-      <i class="fas fa-shield-alt is-size-6 mr-1"></i> {{ $t('common.SECURITY') }}
-    </p>
-
-    <div class="mt-1 user-details settings-data">
-      <div v-if="!twoFactorActive && !twoFactorEmailActive" class="details has-text-left">
-        <p>
-          {{ $t('2fa.PLEASE_ADD_2_STEP') }}
-          <router-link to="/settings/2fa" class="login-router transition-faster">{{
-            $t('common.ENABLE_IN_SETTINGS')
-          }}</router-link>
-        </p>
-      </div>
-      <div v-else class="details has-text-left">
-        <div class="protection-enabled" v-if="twoFactorEmailActive">
-          <i class="fas fa-envelope mr-1 is-size-6"></i>
-          <p class="mr-1">{{ $t('common.EMAIL') }}</p>
-          <span data-cy="2FAEmailEnabled" class="enabled">{{ $t('common.ENABLED') }}</span>
-        </div>
-        <div class="protection-enabled mt-1" v-if="twoFactorActive">
-          <i class="fas fa-mobile-alt mr-1 is-size-6"></i>
-          <p class="mr-1">{{ $t('2fa.2_STEP_AUTH') }}</p>
-          <span data-cy="2FAAuthenticatorEnabled" class="enabled">{{ $t('common.ENABLED') }}</span>
-        </div>
-      </div>
-    </div>
-
-    <div v-if="twoFactorActive || twoFactorEmailActive" class="mt-2 has-text-left is-size-7">
-      <p class="has-text-weight-medium">{{ $t('2fa.2_STEP_RECOMMENDATION_TITLE') }}</p>
-      <p>{{ $t('2fa.2_STEP_RECOMMENDATION_DESCRIPTION') }}</p>
-    </div>
-
-    <div class="divider just-space"></div>
+    
 
     <div class="links is-flex is-align-items-center is-justify-content-center">
       <div class="link is-flex has-text-weight-medium is-align-items-center">
-        <i class="fas fa-question-circle mr-1 is-size-6"></i>
-        <a
-          href="https://support.morpher.com/en/category/morpher-wallet-idvnts/"
-          target="__blank"
-          class="login-router transition-faster"
-          >{{ $t('common.SUPPORT') }}</a
-        >
+        
+        <a href="https://support.morpher.com/en/category/morpher-wallet-idvnts/" target="__blank" class="login-router transition-faster is-flex is-align-items-center">
+          <img src="@/assets/img/support.svg">
+          {{ $t('common.SUPPORT') }}
+          </a>
       </div>
-      <div class="divider vertical"></div>
+      
       <div class="link is-flex has-text-weight-medium is-align-items-center">
-        <i class="fas fa-door-open mr-1 is-size-6"></i>
-        <div data-cy="logoutButton" @click="logout()" class="login-router transition-faster">
+        
+        <div data-cy="logoutButton" @click="logout()" class="login-router transition-faster  is-flex is-align-items-center">
+          <img src="@/assets/img/logout.svg">
           {{ $t('common.LOGOUT') }}
         </div>
       </div>
+    </div> 
+
+    <!-- Hidden - only for unit test verification -->
+    <div style="display:none">
+          <span data-cy="2FAEmailEnabled" v-if="twoFactorEmailActive" >{{ $t('common.ENABLED') }}</span>
+          <span data-cy="2FAAuthenticatorEnabled" v-if="twoFactorActive">{{ $t('common.ENABLED') }}</span>
     </div>
+
   </div>
 </template>
 
@@ -179,6 +125,20 @@ export default defineComponent({
       iconSeed: ''
     }
   },
+  computed: {
+    issueCount() {
+      let count = 0;
+      if (!this.twoFactorActive && !this.twoFactorEmailActive) {
+        count +=1;
+      }
+      if (this.noRecoveryMethods) {
+        count +=1;
+      }
+
+      return count
+    }
+  },
+  
   async mounted() {
     if (this.isIframe() && !this.store.loginComplete) {
       if (this.store.connection && this.store.connection !== null) {
@@ -221,7 +181,7 @@ export default defineComponent({
       }
     },
     copyETHAddress(ethAddress: string): void {
-      copyToClipboard(ethAddress)
+      copyToClipboard(ethAddress, this.$buefy)
     },
     logout() {
       this.logoutWallet()

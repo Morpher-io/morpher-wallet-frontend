@@ -1,29 +1,24 @@
 <template>
   <div class="container">
+    <button @click="redirectUser" tag="button" class="back-button">
+      <img alt="chevron-left" src="@/assets/img/back.svg">
+    </button>
+
     <ConfirmAccess
       v-if="currentPage === 0"
       @pageBack="pageBack"
       @accessConfirmed="accessConfirmed"
     />
     <div v-if="currentPage === 1">
-      <div class="title-container has-text-left">
-        <button
-          @click="redirectUser"
-          tag="button"
-          class="button is-grey big-button outlined-button is-thick transition-faster is-icon-only"
-        >
-          <span class="icon is-small">
-            <i class="fas fa-chevron-left"></i>
-          </span>
-        </button>
-        <h2 class="title ml-3">{{ $t('recovery.ACCOUNT_RECOVERY') }}</h2>
-      </div>
-      <p class="subtitle has-text-left">
+      <img src="@/assets/img/recover.svg" :alt="$t('recovery.ACCOUNT_RECOVERY') ">
+
+      <h2 class="title ml-3">{{ $t('recovery.ACCOUNT_RECOVERY') }}</h2>
+      <p class="subtitle">
         {{ $t('recovery.ADD_TRUSTED_ACCOUNT') }}
       </p>
 
       <div class="error mt-3 mb-3" v-if="logonError">
-        <p>⚠️ <span v-html="logonError"></span></p>
+        <p><img src="@/assets/img/warning-triangle.svg" alt="warning-triangle"><img src="@/assets/img/warning-triangle.svg" alt="warning-triangle"> <span v-html="logonError"></span></p>
       </div>
       <div>
         <AddRecoveryApple
@@ -103,10 +98,10 @@
       <div class="divider just-space" />
 
       <div class="has-text-left mt-5 is-size-7">
-        <p class="has-text-weight-bold">
-          <i class="fas fa-shield-alt"></i> {{ $t('recovery.ADD_ACCOUNT_TIP_TITLE') }}
+        <p class="is-flex">
+           <img src="@/assets/img/encrypted.svg" alt="encrypted data shield" ><b>{{ $t('recovery.ADD_ACCOUNT_TIP_TITLE') }}</b>
         </p>
-        <p>
+        <p class="is-text-small">
           {{ $t('recovery.ADD_ACCOUNT_TIP_DESCRIPTION') }}
         </p>
       </div>
@@ -135,9 +130,9 @@
         <button
           @click="resetData"
           tag="button"
-          class="button outlined-button big-button transition-faster"
+          class="button is-green big-button is-login transition-faster"
         >
-          <span class="text">{{ $t('common.CLOSE') }}</span>
+          <span class="text">{{ $t('common.DONE') }}</span>
         </button>
       </div>
     </div>
@@ -275,5 +270,7 @@ export default defineComponent({
 
 .another-text {
   margin-bottom: -10px;
+  font-weight: 700;
+
 }
 </style>

@@ -3,15 +3,18 @@
     <h2 class="title">{{ $t('2fa.CHANGE_AUTH_TITLE') }}</h2>
     <p class="subtitle">{{ $t('2fa.CHANGE_AUTH_DESCRIPTION') }}</p>
 
-    <div class="custom-card">
+    <div class="custom-card mt-1">
       <figure class="image" v-if="qrCode">
         <img v-bind:src="qrCode" :alt="$t('2fa.QR_CODE')" />
       </figure>
       <p style="margin-top: 10px">{{ $t('2fa.CHANGE_AUTH_SECRET') }}:</p>
-      <p>{{ secret }}</p>
+      <p><b>{{ secret }}</b></p>
     </div>
-    <p class="is-size-7 mt-2 transition-faster">
+    <div class="mt-1">
       {{ $t('2fa.NEED_AUTHENTICATOR_HELP') }}
+    </div>
+    <div>
+      {{ $t('2fa.CAN_USE') }}
       <a href="https://authy.com/download/" target="_blank" class="login-router">Authy</a>
       {{ $t('2fa.NEED_AUTHENTICATOR_OR') }}
       <a
@@ -20,10 +23,10 @@
         class="login-router"
         >Google Authenticator</a
       >.
-    </p>
+    </div>
 
     <div class="field">
-      <label class="label">{{ $t('2fa.VERIFICATION_CODE') }}</label>
+      <label class="label">{{ $t('2fa.AUTH_CODE') }}</label>
 
       <div class="control">
         <input
@@ -32,13 +35,14 @@
           inputmode="numeric"
           class="input"
           v-model="authenticatorCode"
+          :placeholder="$t('2fa.ENTER_APP_CODE')"
           @keypress="handleKeyPress"
         />
       </div>
     </div>
 
-    <div class="error mt-3" v-if="logonError">
-      <p>⚠️ <span data-cy="2faAuthenticatorError" v-html="logonError"></span></p>
+    <div class="error" v-if="logonError">
+      <p><img src="@/assets/img/warning.svg" alt="warning-icon"> <span data-cy="2faAuthenticatorError" v-html="logonError"></span></p>
     </div>
 
     <button
@@ -47,14 +51,9 @@
       class="button is-green big-button is-login transition-faster mt-5"
       :disabled="!authenticatorCode"
     >
-      <span class="text">{{ $t('common.CONFIRM') }}</span>
+      <span class="text">{{ $t('common.SUBMIT') }}</span>
     </button>
-    <button
-      v-on:click="pageBack()"
-      class="button is-ghost is-blue big-button medium-text transition-faster"
-    >
-      <span class="text">{{ $t('common.BACK') }}</span>
-    </button>
+
   </div>
 </template>
 

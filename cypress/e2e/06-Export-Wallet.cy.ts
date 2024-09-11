@@ -218,7 +218,7 @@ describe('Export Wallet', () => {
 		
 				cy.get('[data-cy=confirmDeleteButton]').click();
 		
-				cy.contains('[data-cy=logInTitle]', 'Log In');
+				cy.contains('[data-cy=logInTitle]', 'Sign In');
 				cy.contains('[data-cy=logInDescription]', 'Unlock your crypto wallet.');
 			//});
 	

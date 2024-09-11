@@ -22,7 +22,7 @@
         <LoginGoogle @processMethod="processMethod"></LoginGoogle>
 
         <button
-          class="button is-grey big-button outlined-button is-thick facebook-button transition-faster"
+          class="button big-button outlined-button facebook-button transition-faster"
           @click="
             logonError = '';
             showSignUp = false;
@@ -36,11 +36,9 @@
           <span>{{ $t('auth.LOGIN_EMAIL') }}</span>
         </button>
 
-        <div class="divider"></div>
-
-        <div class="error mt-5" v-if="logonError">
+        <div class="error" v-if="logonError">
           <p data-cy="loginError">
-            ⚠️ <span v-html="logonError"></span>
+            <img src="@/assets/img/warning.svg" alt="warning-icon"> <span v-html="logonError"></span>
             <router-link v-if="showSignUp" to="/signup" class="login-router transition-faster"
               ><span class="ml-1">{{ $t('auth.SIGN_UP_WALLET_QUESTION') }}</span></router-link
             >
@@ -71,7 +69,7 @@
 
           <div class="control">
             <input
-              type="password"
+              :type="passwordIsVisible ? 'text' : 'password'"
               ref="login_password"
               class="input"
               data-cy="walletPassword"
@@ -79,18 +77,26 @@
               name="walletPassword"
               v-model="walletPassword"
             />
+            
+            <button class="password-toggle" v-on:click="togglePasswordVisibility" data-cy="password-toggle-button">
+              <img v-if="passwordIsVisible" class="image" src="@/assets/img/password-hide.svg" alt="Visible Button" />
+              <img v-else class="image" src="@/assets/img/password-show.svg" alt="Invisible Button" />
+						</button>
           </div>
         </div>
 
         <div class="error" v-if="logonError">
-          <p data-cy="loginError">
-            ⚠️ <span v-html="logonError"></span>
-            <router-link v-if="showSignUp" to="/signup" class="login-router transition-faster"
-              ><span class="ml-1">{{ $t('auth.SIGN_UP_WALLET_QUESTION') }}</span></router-link
-            >
-            <router-link v-if="showRecovery" to="/recovery" class="login-router transition-faster"
-              ><span class="ml-1">{{ $t('auth.RECOVER_YOUR_WALLET_QUESTION') }}</span></router-link
-            >
+          <p data-cy="loginError" class="errorbox">
+            <img src="@/assets/img/warning.svg" alt="warning-icon">
+            <div>
+              <div v-html="logonError"></div>
+              <router-link v-if="showSignUp" to="/signup" class="login-router transition-faster">
+                {{ $t('auth.SIGN_UP_WALLET_QUESTION') }}
+              </router-link>
+              <router-link v-if="showRecovery" to="/recovery" class="login-router transition-faster">
+                {{ $t('auth.RECOVER_YOUR_WALLET_QUESTION') }}
+              </router-link>
+            </div>
           </p>
         </div>
 
@@ -111,8 +117,6 @@
         </p>
       </div>
 
-      <div class="divider"></div>
-
       <div class="login-link">
         <span>{{ $t('auth.DO_NOT_HAVE_WALLET') }}&nbsp;</span>
         <router-link to="/signup" class="login-router transition-faster">
@@ -127,7 +131,6 @@
 
 <script lang="ts">
 import { Global } from '@/mixins/global'
-import Password from 'vue-simple-password-meter'
 import { getDictionaryValue } from '@/utils/dictionary'
 import Recaptcha from '@/mixins/recaptcha'
 import LoginGoogle from '@/components/LoginGoogleV2.vue'
@@ -137,7 +140,6 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   components: {
-    Password,
     LoginApple,
     LoginGoogle
   },
@@ -152,7 +154,8 @@ export default defineComponent({
       logonError: '',
       passwordSignin: false,
       showSignUp: false,
-      loginUser
+      loginUser,
+      passwordIsVisible: false
     }
   },
   async mounted() {
@@ -220,6 +223,9 @@ export default defineComponent({
       } catch (err) {
         console.log('error processing hidden login', err)
       }
+    },
+    togglePasswordVisibility() {
+      this.passwordIsVisible = !this.passwordIsVisible
     },
     unlock() {
       if (

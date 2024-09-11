@@ -3,21 +3,28 @@
     <div class="control is-expanded" v-if="!hasRecoveryMethod">
       <LoginGoogle @processMethod="processMethod" :recovery="true"></LoginGoogle>
     </div>
-    <div v-if="hasRecoveryMethod" class="has-text-centered">
-      <div class="control is-expanded" v-if="hasRecoveryMethod">
-        <LoginGoogle @processMethod="revokeAccess"></LoginGoogle>
+
+    <div class="recovery-active" v-if="hasRecoveryMethod">
+
+      <img src="@/assets/img/google_logo.svg" alt="Google Logo" />
+      <div style="justify-self: stretch;">
+        <p>{{ $t('recovery.GOOGLE_RECOVERY')}}</p>
+        <p class="enable-tag">{{ $t('common.ENABLED') }}</p>
       </div>
-      <div class="recovery-active is-text-small">
-        <span class="icon">
-          <i class="fas fa-check-circle"></i>
-        </span>
-        {{
-          $t('recovery.RECOVERY_ACTIVE', {
-            currentMethod: 'Google'
-          })
-        }}
+
+      <div class="logon">
+
+        <LoginGoogle @processMethod="revokeAccess" :revoke="true">
+          
+        </LoginGoogle>
+            
+          
+        
       </div>
+
+
     </div>
+
   </div>
 </template>
 

@@ -1,18 +1,22 @@
 <template>
   <div class="field">
+    <div v-if="revoke"><img @click="googleTokenLogin" src="@/assets/img/switch-on.svg">  </div>
+
     <button
-      class="button is-grey big-button outlined-button is-thick transition-faster"
-      v-if="clientId"
+
+      class="button big-button outlined-button transition-faster"
+      v-else-if="clientId"
       @click="googleTokenLogin"
       data-cy="googleButton"
     >
-      <span class="icon img">
+      <span class="icon img" v-if="!revoke">
         <img src="@/assets/img/google_logo.svg" alt="Google Logo" />
       </span>
       <span v-if="signIn">{{ $t('auth.SIGN_UP_GOOGLE') }} </span>
       <span v-else-if="unlock">{{ $t('auth.UNLOCK_GOOGLE') }} </span>
       <span v-else-if="update">{{ $t('auth.UPDATE_GOOGLE') }} </span>
       <span v-else-if="recovery">{{ $t('auth.GOOGLE') }} </span>
+      
       <span v-else>{{ $t('auth.LOG_IN_GOOGLE') }} </span>
     </button>
   </div>
@@ -144,6 +148,10 @@ export default defineComponent({
       type: Boolean as PropType<any>
     },
     recovery: {
+      default: false,
+      type: Boolean as PropType<any>
+    },
+    revoke: {
       default: false,
       type: Boolean as PropType<any>
     }

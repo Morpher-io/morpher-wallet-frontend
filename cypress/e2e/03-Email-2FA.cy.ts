@@ -29,8 +29,6 @@ describe('Email 2FA', () => {
 		cy.get('[data-cy=settingsButton]').click();
 		cy.get('[data-cy=verificationSettings]').click();
 
-		cy.get('[data-cy=emailToggle]').contains('Enable');
-
 		cy.get('[data-cy=emailToggle]').click();
 
 		//cy.get('[data-cy=confirmAccessTitle]').contains('Please enter your password before making changes.');
@@ -55,9 +53,8 @@ describe('Email 2FA', () => {
 
 			cy.get('[data-cy=closeButton]').click();
 
-			cy.get('[data-cy=emailToggle]').contains('Disable');
 
-			cy.get('[data-cy=email2faConfirmed]').contains('Verification enabled');
+			cy.get('[data-cy=email2faConfirmed]').contains('Verification Enabled');
 		});
 	});
 
@@ -126,7 +123,6 @@ describe('Email 2FA', () => {
 			cy.get('[data-cy=settingsButton]').click();
 			cy.get('[data-cy=verificationSettings]').click();
 
-			cy.get('[data-cy=emailToggle]').contains('Disable');
 
 			cy.get('[data-cy=emailToggle]').click();
 

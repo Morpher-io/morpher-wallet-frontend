@@ -27,7 +27,6 @@ describe('Authenticator 2FA', () => {
 		cy.get('[data-cy=settingsButton]').click();
 		cy.get('[data-cy=verificationSettings]').click();
 
-		cy.get('[data-cy=authenticatorToggle]').contains('Enable');
 
 		cy.get('[data-cy=authenticatorToggle]').click();
 
@@ -72,7 +71,6 @@ describe('Authenticator 2FA', () => {
 		cy.get('[data-cy=settingsButton]').click();
 		cy.get('[data-cy=verificationSettings]').click();
 
-		cy.get('[data-cy=authenticatorToggle]').contains('Enable');
 
 		cy.get('[data-cy=authenticatorToggle]').click();
 
@@ -97,10 +95,8 @@ describe('Authenticator 2FA', () => {
 					);
 	
 					cy.get('[data-cy=closeButton]').click();
-	
-					cy.get('[data-cy=authenticatorToggle]').contains('Disable');
-	
-					cy.get('[data-cy=authenticator2faConfirmed]').contains('Verification enabled');
+		
+					cy.get('[data-cy=authenticator2faConfirmed]').contains('Verification Enabled');
 				});
 			});
 	
@@ -175,7 +171,6 @@ describe('Authenticator 2FA', () => {
 				cy.get('[data-cy=settingsButton]').click();
 				cy.get('[data-cy=verificationSettings]').click();
 
-				cy.get('[data-cy=authenticatorToggle]').contains('Disable');
 
 				cy.get('[data-cy=authenticatorToggle]').click();
 

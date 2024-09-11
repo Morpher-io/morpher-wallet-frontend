@@ -1,7 +1,12 @@
 <template>
   <div>
+    <button @click="pageBack" tag="button" class="back-button">
+      <img alt="chevron-left" src="@/assets/img/back.svg">
+    </button>
+  
+    
+    <img src="@/assets/img/unlock-account.svg" :alt="$t('images.PASSWORD_IMAGE')" class="mt-1" />
     <h2 class="title">{{ $t('confirm.CONFIRM_ACCESS_TITLE') }}</h2>
-    <img src="@/assets/img/password.svg" :alt="$t('images.PASSWORD_IMAGE')" class="mb-3" />
 
     <p data-cy="confirmAccessTitle" v-if="!store.twoFaRequired.authenticator" class="subtitle">
       {{ $t('confirm.CONFIRM_ACCESS_DESCRIPTION') }}
@@ -28,8 +33,8 @@
       </div>
     </div>
 
-    <div class="error mt-3" v-if="logonError">
-      <p>⚠️ <span data-cy="passwordError" v-html="logonError"></span></p>
+    <div class="error" v-if="logonError">
+      <p><img src="@/assets/img/warning.svg" alt="warning-icon"> <span data-cy="passwordError" v-html="logonError"></span></p>
     </div>
     <button
       data-cy="confirmAccessButton"
@@ -39,13 +44,9 @@
     >
       <span class="text">{{ $t('common.CONTINUE') }}</span>
     </button>
-    <button
-      v-on:click="pageBack()"
-      class="button is-ghost is-blue big-button medium-text transition-faster"
-    >
-      <span class="text">{{ $t('common.BACK') }}</span>
-    </button>
+
   </div>
+  
 </template>
 
 <script lang="ts">

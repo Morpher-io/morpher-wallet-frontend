@@ -4,7 +4,7 @@
       <HFaceBookLogin v-slot="fbLogin" :app-id="clientId" :version="'v18.0'" @onSuccess="onLogin">
         <button
           @click="fbLogin.initFBLogin"
-          class="button is-grey big-button outlined-button is-thick transition-faster facebook-button"
+          class="button big-button outlined-button transition-faster facebook-button"
         >
           <span class="is-flex is-align-items-center" slot="login">
             <span class="icon img">
@@ -15,36 +15,28 @@
         </button>
       </HFaceBookLogin>
     </div>
-    <div class="control is-expanded has-text-centered" v-if="hasRecoveryMethod">
-      <HFaceBookLogin
-        v-slot="fbLogin"
-        :app-id="clientId"
-        :version="'v18.0'"
-        @onSuccess="deleteRecovery"
-      >
-        <button
-          @click="fbLogin.initFBLogin"
-          class="button is-grey big-button outlined-button is-thick transition-faster facebook-button"
-        >
-          <span class="is-flex is-align-items-center" slot="login">
-            <span class="icon img">
-              <img src="@/assets/img/fb_logo.svg" alt="Facebook Logo" />
-            </span>
-            <span>{{ $t('recovery.REVOKE_ACCESS') }}</span>
-          </span>
-        </button>
-      </HFaceBookLogin>
+    <div class="recovery-active" v-if="hasRecoveryMethod">
 
-      <div class="recovery-active is-text-small">
-        <span class="icon">
-          <i class="fas fa-check-circle"></i>
-        </span>
-        {{
-          $t('recovery.RECOVERY_ACTIVE', {
-            currentMethod: 'Facebook'
-          })
-        }}
+      <img src="@/assets/img/fb_logo.svg" alt="Facebook Logo" />
+      <div style="justify-self: stretch;">
+        <p>{{ $t('recovery.FACEBOOK_RECOVERY')}}</p>
+        <p class="enable-tag">{{ $t('common.ENABLED') }}</p>
       </div>
+
+      <div class="logon">
+        <HFaceBookLogin
+          v-slot="fbLogin"
+          :app-id="clientId"
+          :version="'v18.0'"
+          @onSuccess="deleteRecovery"
+        >
+          
+            <img @click="fbLogin.initFBLogin" src="@/assets/img/switch-on.svg">
+          
+        </HFaceBookLogin>
+      </div>
+
+      
     </div>
   </div>
 </template>

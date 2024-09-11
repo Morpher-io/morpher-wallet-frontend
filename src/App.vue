@@ -10,12 +10,8 @@
     >
       <spinner v-bind:active="loading" v-bind:status="spinnerStatusText"></spinner>
       <NetworkError :active="isNetworkError && !loading" />
-      <div class="header">
-        <img src="@/assets/img/wallet_logo.svg" class="headerImage" />
-        <span class="icon closeButton" v-if="iFrameDisplay" @click="closeWallet">
-          <i class="fa fa-times"></i>
-        </span>
-      </div>
+      
+
 
       <router-view v-slot="{ Component }">
         <transition name="fade" mode="out-in">

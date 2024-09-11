@@ -59,7 +59,7 @@
     </p>
 
     <div class="error mt-3" v-if="logonError">
-      <p>⚠️ <span v-html="logonError"></span></p>
+      <p><img src="@/assets/img/warning-triangle.svg" alt="warning-triangle"> <span v-html="logonError"></span></p>
     </div>
 
     <button

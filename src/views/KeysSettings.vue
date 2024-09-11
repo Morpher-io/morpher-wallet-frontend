@@ -1,23 +1,15 @@
 <template>
   <div class="container">
-    <div v-if="currentPage === 0">
-      <div class="title-container has-text-left">
-        <button
-          data-cy="backArrowButton"
-          @click="redirectUser"
-          tag="button"
-          class="button is-grey big-button outlined-button is-thick transition-faster is-icon-only"
-        >
-          <span class="icon is-small">
-            <i class="fas fa-chevron-left"></i>
-          </span>
-        </button>
-        <h2 class="title ml-3">{{ $t('export.EXPORT_WALLET_TITLE') }}</h2>
-      </div>
+    <button @click="redirectUser" data-cy="backArrowButton" tag="button" class="back-button">
+      <img alt="chevron-left" src="@/assets/img/back.svg">
+    </button>
 
-      <p class="has-text-left mt-2 transition-faster">
+    <div v-if="currentPage === 0">
+      <h2 class="title ml-3">{{ $t('export.EXPORT_WALLET_TITLE') }}</h2>
+
+      <p class="transition-faster">
         <span v-html="$t('export.EXPORT_WALLET_DESCRIPTION')"></span>
-        <a
+        &nbsp;<a
           href="https://support.morpher.com/en/article/export-morpher-wallet-d6wr6g/"
           target="__blank"
           class="login-router"
@@ -34,14 +26,12 @@
         <span class="text">{{ $t('export.EXPORT_SEED') }}</span>
       </button>
 
-      <div class="divider just-space" />
 
-      <p class="mt-4 has-text-left">{{ $t('export.ADDITIONAL_OPTIONS') }}</p>
       <button
         data-cy="exportPrivateKeyButton"
         @click="setExport('key')"
         tag="button"
-        class="button outlined-button is-thick big-button transition-faster mt-2"
+        class="button outlined-button big-button transition-faster mt-2"
       >
         <span class="text">{{ $t('export.EXPORT_KEY') }}</span>
       </button>
@@ -66,9 +56,9 @@
 
       <div class="links is-flex is-align-items-center is-justify-content-center mt-2">
         <div class="link is-flex has-text-weight-medium is-align-items-center">
-          <i class="fas fa-copy mr-1"></i>
+          <img class="copy-logo" alt="copy-icon" src="@/assets/img/copy.svg">
           <div
-            @click="copyToClipboard(store.seedPhrase)"
+            @click="copyToClipboard(store.seedPhrase, $buefy)"
             class="login-router is-size-7 transition-faster"
           >
             {{ $t('common.COPY_TO_CLIPBOARD') }}
@@ -77,12 +67,12 @@
       </div>
 
       <button
-        @click="resetData()"
-        tag="button"
-        class="button outlined-button is-thick big-button transition-faster mt-4"
-      >
-        <span class="text">{{ $t('common.CLOSE') }}</span>
-      </button>
+          @click="resetData"
+          tag="button"
+          class="button is-green big-button is-login transition-faster"
+        >
+          <span class="text">{{ $t('common.DONE') }}</span>
+        </button>
     </div>
 
     <div v-if="currentPage === 3">
@@ -97,9 +87,9 @@
 
       <div class="links is-flex is-align-items-center is-justify-content-center mt-2">
         <div class="link is-flex has-text-weight-medium is-align-items-center">
-          <i class="fas fa-copy mr-1"></i>
+          <img class="copy-logo" alt="copy-icon" src="@/assets/img/copy.svg">
           <div
-            @click="copyToClipboard(store.privateKey)"
+            @click="copyToClipboard(store.privateKey, $buefy)"
             class="login-router is-size-7 transition-faster"
           >
             {{ $t('common.COPY_TO_CLIPBOARD') }}
@@ -107,8 +97,8 @@
         </div>
       </div>
 
-      <div data-cy="privateKeyJsonMessage" class="alert warning has-text-left is-size-7 mt-5">
-        ⚠ {{ $t('export.KEY_PASSWORD_PROTECTED') }}
+      <div data-cy="privateKeyJsonMessage" class="alert warning has-text-left is-flex">
+        <img src="@/assets/img/warning-triangle.svg" alt="warning-triangle"><div>{{ $t('export.KEY_PASSWORD_PROTECTED') }}</div>
       </div>
 
       <div class="field">
@@ -140,12 +130,12 @@
 
       <button
         data-cy="exportBackButton"
-        @click="resetData()"
-        tag="button"
-        class="button outlined-button is-thick big-button transition-faster mt-4"
-      >
-        <span class="text">{{ $t('common.CLOSE') }}</span>
-      </button>
+          @click="resetData"
+          tag="button"
+          class="button is-green big-button is-login transition-faster"
+        >
+          <span class="text">{{ $t('common.DONE') }}</span>
+        </button>
     </div>
   </div>
 </template>
@@ -173,7 +163,12 @@ export default defineComponent({
   },
   methods: {
     redirectUser() {
-      this.$router.push('/settings').catch(() => undefined)
+      if (this.currentPage === 0) {
+        this.$router.push('/settings').catch(() => undefined)
+      } else {
+        this.resetData()
+      }
+      
     },
     setExport(page: string) {
       this.page = page
@@ -231,5 +226,10 @@ export default defineComponent({
 .seed {
   line-height: 1.5rem !important;
   overflow-wrap: break-word;
+}
+
+.copy-logo {
+  width: 16px;
+  padding-right: 5px;
 }
 </style>

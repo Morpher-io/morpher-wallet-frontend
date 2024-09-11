@@ -128,6 +128,15 @@ export type TypePayloadData = {
   app_lang?: string
 }
 
+export type TypePasswordCheck = {
+  __typename?: 'TypePasswordCheck'
+    min?: string;
+    uppercase?: string;
+    lowercase?: string;
+    number?: string;
+    match?: string;
+  
+}
 export type Type2FAUpdateParams = {
   __typename?: 'Type2FAUpdateParams'
   email: boolean
