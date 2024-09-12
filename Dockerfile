@@ -1,26 +1,42 @@
-FROM public.ecr.aws/docker/library/node:18-buster
+FROM public.ecr.aws/docker/library/node:22-alpine AS builder
+
+RUN apk add git python3 make gcc
+
+ARG NPM_BUILD_ENV=production
 
 # ARG DEBIAN_FRONTEND=noninteractive
 # ENV TZ=Europe/Vienna
 # RUN apt-get install -y tzdata
 # Create app directory
-WORKDIR /app
+WORKDIR /usr/src/app
 
 # Install app dependencies
 # A wildcard is used to ensure both package.json AND package-lock.json are copied
 # where available (npm@5+)
 COPY package*.json ./
 
-RUN apt-get clean && apt-get update && apt-get -y install python3 make g++ && npm install
+
+
+
+RUN npm install
+
+ENV NODE_ENV=${NPM_BUILD_ENV}
+
 # If you are building your code for production
 # RUN npm ci --only=production
 
 
 # Bundle app source
-COPY . .
+COPY . /usr/src/app/
 
+RUN npx vue-tsc --build --force
+RUN npx vite build --mode ${NPM_BUILD_ENV}
 
-#RUN DEBIAN_FRONTEND=noninteractive apt-get -y install keyboard-configuration
+FROM public.ecr.aws/nginx/nginx:stable-alpine
 
-EXPOSE 3001
-CMD [ "npm", "run", "serve" ]
+ARG ENABLE_HTACCESS=false
+COPY ./nginx/nginx.conf /etc/nginx/nginx.conf
+COPY ./nginx/default.conf /etc/nginx/conf.d/default.conf
+COPY ./nginx/.htpasswd /etc/nginx/conf.d/.htpasswd
+RUN if [ "$ENABLE_HTACCESS" = "true" ] ; then sed -ri -e "s!#auth!auth!g" /etc/nginx/conf.d/default.conf ; fi
+COPY --from=builder /usr/src/app/dist /usr/share/nginx/html
