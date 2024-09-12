@@ -255,7 +255,7 @@
     "RECOVERY_UNLOCK_ERROR": "Unable to unlock your wallet. This may be because you used a different account or never set up account recovery.",
     "FALLBACK_MESSAGE": "Something went wrong. Please try again later.",
     "TOO_MANY_REQUESTS": "Request blocked due to too many requests. Please try again later.",
-    "TOKEN_VALIDATION_ERROR": "SSO Token valication failed.",
+    "TOKEN_VALIDATION_ERROR": "SSO Token validation failed.",
     "SSO_KEY_MISMATCH": "SSO user key mismatch.",
     "INVALID_RECOVERY_TYPE": "Invalid recovery type."
   },

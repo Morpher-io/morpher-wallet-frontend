@@ -119,6 +119,14 @@ export default defineComponent({
             if (txObj.gas && String(txObj.gas).includes('0x')) {
               txObj.gas = fromHex(txObj.gas, 'bigint')
             }
+            if (txObj.gasPrice && String(txObj.gasPrice).includes('0x')) {
+              txObj.gasPrice = fromHex(txObj.gasPrice, 'bigint')
+            }
+            if (txObj.nonce && String(txObj.nonce).includes('0x')) {
+              txObj.nonce = fromHex(txObj.nonce, 'bigint')
+            }
+            
+            
             // if (!txObj.gas) {
             //   txObj.gas = BigInt(21000)
             // }
