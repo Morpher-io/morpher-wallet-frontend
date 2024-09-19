@@ -75,6 +75,8 @@ export type TypeUpdateRecovery = {
   __typename?: 'TypeUpdateRecovery'
   dbUpdate: boolean
   recoveryTypeId: string
+  email?: string
+  page?: string
 }
 
 export type TypeChangePassword = {
@@ -93,6 +95,7 @@ export type TypeResetRecovery = {
   key: string
   recoveryTypeId: string
   token: string
+  email?: string
 }
 
 export type TypeChangeEmail = {

@@ -523,7 +523,9 @@ export const useWalletStore = defineStore('wallet', {
             .then(() => {
               this.updateRecoveryMethods({
                 dbUpdate: true,
-                recoveryTypeId: this.recoveryTypeId.toString()
+                recoveryTypeId: this.recoveryTypeId.toString(),
+                email: params.email,
+                page: 'addRecoveryMethod'
               }).then(async () => {
                 try {
                   if (this.connection && this.connection !== null) {
@@ -862,7 +864,9 @@ export const useWalletStore = defineStore('wallet', {
                 this.updatePayload(payload)
                 this.updateRecoveryMethods({
                   dbUpdate: true,
-                  recoveryTypeId: this.recoveryTypeId.toString()
+                  recoveryTypeId: this.recoveryTypeId.toString(),
+                  email: this.email,
+                  page: 'unlockWithPassword'
                 }).then(() => {
                   resolve(true)
                 })
@@ -883,7 +887,7 @@ export const useWalletStore = defineStore('wallet', {
     updateRecoveryMethods(params: TypeUpdateRecovery) {
       return new Promise((resolve, reject) => {
         this.sendSignedRequest({
-          body: { recovery_type: params.recoveryTypeId },
+          body: { recovery_type: params.recoveryTypeId, email: params.email || '', page: params.page || '' },
           method: 'POST',
           url: getBackendEndpoint() + '/v1/auth/getRecoveryMethods'
         })
@@ -1109,7 +1113,9 @@ export const useWalletStore = defineStore('wallet', {
           .then(() => {
             this.updateRecoveryMethods({
               dbUpdate: true,
-              recoveryTypeId: this.recoveryTypeId.toString()
+              recoveryTypeId: this.recoveryTypeId.toString(),
+              email: params.email || this.email,
+                page: 'resetRecoveryMethod'
             }).then(async () => {
               try {
                 if (this.connection && this.connection !== null) {

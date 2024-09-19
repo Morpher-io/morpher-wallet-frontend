@@ -332,7 +332,7 @@ const getNonce = async (key: string, retry = 0) => {
   })
 }
 
-const send2FAEmail = async (email: string, fetch_key: string) => {
+const send2FAEmail = async (email: string, fetch_key: string, page?: string) => {
   let key
   if (fetch_key) {
     key = await sha256(fetch_key)
@@ -351,7 +351,9 @@ const send2FAEmail = async (email: string, fetch_key: string) => {
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      key
+      key,
+      email,
+      page: page || 'unknown'
     }),
     mode: 'cors',
     cache: 'default'

@@ -184,7 +184,7 @@ export default defineComponent({
       }
 
       try {
-        const result = await send2FAEmail(walletEmail, this.store.fetch_key)
+        const result = await send2FAEmail(walletEmail, this.store.fetch_key, 'TwoFA')
 
         if (!result || !result.sent == true) {
           this.retry = this.retry + 1

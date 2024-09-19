@@ -70,7 +70,7 @@ export default defineComponent({
   },
   async mounted() {
     try {
-      send2FAEmail(this.store.walletEmail, this.store.fetch_key)
+      send2FAEmail(this.store.walletEmail, this.store.fetch_key, 'ConfirmAccess')
         .then(() => {
           this.initialized = true
         })
