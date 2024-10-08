@@ -350,11 +350,11 @@ export default defineComponent({
       let password = this.walletPassword
       let recoveryTypeId = 1
       let token = ''
-      let fetch_key = email
+      let fetch_key = email?.toLowerCase()
 
       if (!this.passwordSignin && this.loginUser && this.loginUser.userID && this.loginUser.key) {
         fetch_key = this.loginUser.key
-        email = this.loginUser.email || this.loginUser.key
+        email = this.loginUser?.email?.toLowerCase() || this.loginUser.key
         password = this.loginUser.userID
         recoveryTypeId = this.loginUser.recoveryTypeId
 

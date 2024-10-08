@@ -285,7 +285,7 @@ export default defineComponent({
       let password = this.walletPassword
       const recaptchaToken = this.recaptchaToken
       let recoveryTypeId = 1
-      let fetch_key = email
+      let fetch_key = email?.toLowerCase()
       let token = ''
 
       if (
@@ -293,7 +293,7 @@ export default defineComponent({
         (this.loginUser.recoveryTypeId === 3 || this.loginUser.recoveryTypeId === 6)
       ) {
         fetch_key = this.loginUser.key
-        email = this.loginUser.email || this.loginUser.key
+        email = this.loginUser?.email?.toLowerCase() || this.loginUser.key
         password = this.loginUser.userID
         recoveryTypeId = this.loginUser.recoveryTypeId
         token = this.loginUser.token

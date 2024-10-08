@@ -54,6 +54,9 @@ const getEncryptedSeedFromMail = async (
   recoveryTypeId: number
 ) =>
   new Promise<TypeEncryptedSeed>((resolve, reject) => {
+    if (email && email.includes('@')) {
+      email = email.toLowerCase()
+    }
     sha256(fetch_key.toLowerCase()).then((key: string) => {
       const options: RequestInit = {
         method: 'POST',
@@ -211,6 +214,11 @@ const recoverSeedSocialRecovery = async (
   recoveryTypeId: number
 ) =>
   new Promise((resolve, reject) => {
+
+    if (signupEmail && signupEmail.includes('@')) {
+      signupEmail = signupEmail.toLowerCase()
+    }
+
     const options: RequestInit = {
       method: 'POST',
       headers: {
