@@ -196,6 +196,7 @@
     "SOME_2FA_WRONG": "Email 2FA ili Authenticator 2FA nisu tačni. Pokušaj ponovo.",
     "EMAIL_2FA_WRONG": "Neispravan Email 2FA kod. Provjerite svoj email i pokušajte ponovo.",
     "EMAIL_2FA_EXPIRED": "Email 2FA kod je istekao. Odjavite se/Prijavite se i unesite Email 2FA kod u roku od 15 minuta.",
+    "EMAIL_2FA_RESENT": "Novi 2FA kod je poslan na vašu e-poštu jer je netačan kod unet 3 puta. Provjerite svoju e-poštu za novi kod i pokušajte ponovo.",
     "METHODS_2FA_NOT_FOUND": "2FA metode nisu pronađene",
     "NONCE_NOT_FOUND": "Nonce nije moguće pronaći",
     "CANNOT_DELETE_USER": "Nije moguće izbrisati korisnika!",
