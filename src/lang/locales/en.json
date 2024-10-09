@@ -239,6 +239,7 @@
     "SOME_2FA_WRONG": "Either Email2FA or Authenticator2FA was wrong. Try again.",
     "EMAIL_2FA_WRONG": "Incorrect Email 2FA code. Check your email and Try again.",
     "EMAIL_2FA_EXPIRED": "Email 2FA is expired. Logout/Login and enter Email 2FA within 15 minutes.",
+    "EMAIL_2FA_RESENT": "A new 2FA code was sent to your email because the incorrect code was entered 3 times. Check your email for the new code and try again.",
     "METHODS_2FA_NOT_FOUND": "2FA methods could not be found",
     "NONCE_NOT_FOUND": "Nonce could not be found",
     "CANNOT_DELETE_USER": "Could not delete User!",
@@ -258,6 +259,7 @@
     "TOKEN_VALIDATION_ERROR": "SSO Token validation failed.",
     "SSO_KEY_MISMATCH": "SSO user key mismatch.",
     "INVALID_RECOVERY_TYPE": "Invalid recovery type."
+    
   },
   "loader": {
     "ACCOUNT_DELETED_SUCCESSFULLY": "Account deleted successfully.",

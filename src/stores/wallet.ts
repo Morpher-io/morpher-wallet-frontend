@@ -731,7 +731,7 @@ export const useWalletStore = defineStore('wallet', {
             emailCorrect = true
           } else {
             this.loginRetryCount += 1
-            if (this.loginRetryCount >= 3) this.authError('2FA Email code not correct')
+            //if (this.loginRetryCount >= 3) this.authError('2FA Email code not correct')
             reject(result.error)
             return
           }
@@ -747,7 +747,7 @@ export const useWalletStore = defineStore('wallet', {
             this.loginRetryCount = 0
           } else {
             this.loginRetryCount += 1
-            if (this.loginRetryCount >= 3) this.authError('2FA Authenticator code not correct')
+            //if (this.loginRetryCount >= 3) this.authError('2FA Authenticator code not correct')
             reject(result.error)
             return
           }
