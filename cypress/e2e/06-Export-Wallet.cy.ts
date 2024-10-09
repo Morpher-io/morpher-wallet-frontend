@@ -39,7 +39,7 @@ describe('Export Wallet', () => {
 			cy.get('[data-cy=confirmAccessButton]').click();
 
 
-			cy.waitUntil(() => cy.get('[data-cy=passwordError]').contains('Could not verify email code. Please try again.'));
+			cy.waitUntil(() => cy.get('[data-cy=passwordError]').contains('Incorrect Email 2FA code. Check your email and Try again.'));
 		});
 	});
 
@@ -75,7 +75,7 @@ describe('Export Wallet', () => {
 			cy.get('[data-cy=confirmAccessButton]').click();
 
 
-			cy.waitUntil(() => cy.get('[data-cy=passwordError]').contains('Could not verify email code. Please try again.'));
+			cy.waitUntil(() => cy.get('[data-cy=passwordError]').contains('Incorrect Email 2FA code. Check your email and Try again.'));
 		});
 	});
 
