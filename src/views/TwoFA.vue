@@ -246,6 +246,7 @@ export default defineComponent({
           this.router.push(nextroute as string).catch(() => undefined)
         })
         .catch(async (error) => {
+          console.log('error', error)
           this.hideSpinner()
           if (error.error === 'RECAPTCHA_REQUIRED') {
             this.executeRecaptcha(this.validateCode)

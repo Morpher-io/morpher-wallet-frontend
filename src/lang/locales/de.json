@@ -167,6 +167,7 @@
     "CRYPTO_DESCYPT_ACCESS": "Kann nicht auf Crypto Subtle zugreifen",
     "DECRYPT_FAILED": "Das angegebene Passwort konnte Ihr Konto nicht entschlüsseln.",
     "EMAIL_2FA_EXPIRED": "E-Mail 2FA ist abgelaufen. Melden Sie sich ab/an und geben Sie E-Mail 2FA innerhalb von 15 Minuten ein.",
+    "EMAIL_2FA_RESENT": "Ein neuer 2FA-Code wurde an Ihre E-Mail gesendet, weil der falsche Code 3 Mal eingegeben wurde. Überprüfen Sie Ihre E-Mail auf den neuen Code und versuchen Sie es erneut.",
     "EMAIL_2FA_WRONG": "Falscher E-Mail 2FA-Code. Überprüfen Sie Ihre E-Mail und versuchen Sie es erneut.",
     "FALLBACK_MESSAGE": "Etwas ist schief gelaufen. Bitte versuchen Sie es später noch einmal.",
     "GOOGLE_COOKIES_BLOCKED": "Ich kann mich nicht bei Google anmelden. Es sieht so aus, als ob Cookies deaktiviert sind, was den Zugriff auf Google blockieren könnte. Versuchen Sie, den Inkognito-Modus zu deaktivieren.",
