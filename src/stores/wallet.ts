@@ -397,7 +397,10 @@ export const useWalletStore = defineStore('wallet', {
     async fetchUser(params: TypeFetchUser) {
       this.updateUnlocking(true)
       const fetch_key: string = params.fetch_key
-      const email: string = params.email
+      let email: string = params.email
+      if (email && email.includes('@')) {
+        email = email.toLowerCase()
+      }
       const password: string = params.password
       const recaptchaToken: string = params.recaptchaToken
       const token: string = params.token
