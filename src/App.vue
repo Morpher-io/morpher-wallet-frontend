@@ -51,8 +51,6 @@ import type { MorpherWalletConfig } from './types/global-types'
 import { i18n } from '@/plugins/i18n'
 import Cookie from 'js-cookie'
 import { fromHex } from 'viem'
-import { sha256 } from './utils/cryptoFunctions'
-import { sha256 as sha2562 } from 'viem'
 
 export default defineComponent({
   components: {
@@ -81,10 +79,6 @@ export default defineComponent({
     }
   },
   mounted() {
-
-    this.checkKey()
-
-    
     if (!this.iFrameDisplay) {
       this.NFTBackground = getRandomNFTBackground()
 
@@ -476,13 +470,6 @@ export default defineComponent({
     }
   },
   methods: {
-    async checkKey() {
-      const key1 = await sha256('MarvinCrews8@gmail.com')
-      const key2 = await sha256('marvincrews8@gmail.com')
-
-      
-      console.log('keys', key1, key2 )
-    },
     async closeWallet() {
       if (this.iFrameDisplay) {
         if (this.connection && this.connection !== null) {
