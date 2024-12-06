@@ -36,7 +36,7 @@
 
 <script lang="ts">
 import isIframe from '@/utils/isIframe'
-import Vue, { defineComponent } from 'vue'
+import { defineComponent } from 'vue'
 import Spinner from '@/components/loading-spinner/Spinner.vue'
 import NetworkError from '@/components/NetworkError.vue'
 import Footer from '@/components/Footer.vue'

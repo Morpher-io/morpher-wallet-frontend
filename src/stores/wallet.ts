@@ -298,10 +298,10 @@ export const useWalletStore = defineStore('wallet', {
       this.encryptedSeed = {}
       this.keystore = null
       this.loginEmail = ''
-
       this.status = ''
       this.token = ''
       this.unlocked = false
+      this.hiddenLogin = undefined;
       const email = localStorage.getItem('email')
       if (email) localStorage.setItem('lastEmail', email)
 
@@ -405,7 +405,7 @@ export const useWalletStore = defineStore('wallet', {
       const recaptchaToken: string = params.recaptchaToken
       const token: string = params.token
       const recoveryTypeId: number = params.recoveryTypeId
-
+      this.hiddenLogin = undefined;
       this.logout()
       return new Promise((resolve, reject) => {
         this.authRequested()
@@ -722,6 +722,7 @@ export const useWalletStore = defineStore('wallet', {
         let emailCorrect = false
         let authenticatorCorrect = false
         let userConfirmed = false
+        this.hiddenLogin = undefined;
 
         if (this.twoFaRequired.email == true) {
           const result = await verifyEmailCode(this.email, params.email2FA)
