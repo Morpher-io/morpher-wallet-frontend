@@ -74,7 +74,7 @@ export default defineComponent({
   data() {
     return {
       iFrameDisplay: isIframe(),
-      isDev: import.meta.env.NODE_ENV !== 'production',
+      isDev: import.meta.env.VITE_MODE !== 'production',
       NFTBackground: null as BackgroundNFT | null
     }
   },
@@ -91,7 +91,7 @@ export default defineComponent({
 
       const conn = connectToParent({
         parentOrigin:
-          import.meta.env.NODE_ENV === 'production'
+          import.meta.env.VITE_MODE === 'production'
             ? /^https:\/\/[w]{0,3}\.?morpher\.com\/?.*$/
             : /.*/gm,
 
