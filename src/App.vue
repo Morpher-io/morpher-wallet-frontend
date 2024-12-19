@@ -466,6 +466,10 @@ export default defineComponent({
           }
         }
       })
+
+      conn.promise.then((child) => {
+          console.log('child', child)
+  });
       this.store.setConnection(conn)
     }
   },
