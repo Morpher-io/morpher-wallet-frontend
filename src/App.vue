@@ -468,8 +468,11 @@ export default defineComponent({
       })
 
       conn.promise.then((child) => {
-          console.log('child', child)
-  });
+        console.log('child', child)
+        console.log('location.ancestorOrigin', location.ancestorOrigins)
+      });
+
+
       this.store.setConnection(conn)
     }
   },
