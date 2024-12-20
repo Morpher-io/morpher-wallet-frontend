@@ -470,6 +470,7 @@ export default defineComponent({
       conn.promise.then((child) => {
         console.log('child', child)
         console.log('location.ancestorOrigin', location.ancestorOrigins)
+        console.log('window.parent.location', window.parent.location)
       });
 
 
