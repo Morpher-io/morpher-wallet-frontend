@@ -113,10 +113,19 @@ const formatEthAddress = (ethAddress: string) => {
     : ''
 }
 
+const checkOrigin = (origin: string) => {
+  const originCheck = import.meta.env.VITE_MODE === 'production'
+            ? /^https:\/\/[w]{0,3}\.?morpher\.com\/?.*$/
+            : /^https:\/\/dev-test\.?morpher.com\/?.*$/
+  const regex = new RegExp(originCheck);
+   return regex.test(origin)
+}
+
 export {
   getAccountsFromKeystore,
   downloadEncryptedKeystore,
   sortObject,
   copyToClipboard,
-  formatEthAddress
+  formatEthAddress,
+  checkOrigin
 }
