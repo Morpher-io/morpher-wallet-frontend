@@ -292,7 +292,7 @@ export const useWalletStore = defineStore('wallet', {
       }
       Sentry.setUser({ id: '', email: '' })
     },
-    logout() {
+    logout(clearHidden = true) {
       this.email = ''
       this.hashedPassword = ''
       this.encryptedSeed = {}
@@ -301,8 +301,11 @@ export const useWalletStore = defineStore('wallet', {
       this.status = ''
       this.token = ''
       this.unlocked = false
-      console.log('clear login - logout')
-      this.hiddenLogin = undefined;
+      if (clearHidden) {
+        console.log('clear login - logout')
+        this.hiddenLogin = undefined;
+      }
+
       const email = localStorage.getItem('email')
       if (email) localStorage.setItem('lastEmail', email)
 
@@ -406,15 +409,16 @@ export const useWalletStore = defineStore('wallet', {
       const recaptchaToken: string = params.recaptchaToken
       const token: string = params.token
       const recoveryTypeId: number = params.recoveryTypeId
-      console.log('clear login - fetch user')
-      this.hiddenLogin = undefined;
-      this.logout()
+      
+      this.logout(false)
       return new Promise((resolve, reject) => {
         this.authRequested()
         sha256(password)
           .then((hashedPassword) => {
             getPayload(fetch_key || email, recaptchaToken)
               .then((payload) => {
+                console.log('clear login - fetch user')
+                this.hiddenLogin = undefined;
                 this.loginRetryCount = 0
                 this.setIpCountry(payload?.ip_country || '')
                 this.userFound({
@@ -453,6 +457,7 @@ export const useWalletStore = defineStore('wallet', {
                 }
               })
               .catch((err) => {
+                console.log('fetchUser error - ' + err)
                 this.updateUnlocking(false)
 
                 if (err.error !== 'RECAPTCHA_REQUIRED')
