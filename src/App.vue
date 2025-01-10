@@ -343,7 +343,7 @@ export default defineComponent({
                 if (storeObject.hiddenLogin) {
                   storeObject.hiddenLoginAction({})
                 }
-                storeObject.hiddenLoginAction({ type, user, password })
+                storeObject.hiddenLoginAction({ action: 'login', type, user, password })
               }, 3000)
             } else {
               localStorage.removeItem('lastEmail')
@@ -354,7 +354,7 @@ export default defineComponent({
               if (storeObject.hiddenLogin) {
                 storeObject.hiddenLoginAction({})
               }
-              storeObject.hiddenLoginAction({ type, user, password })
+              storeObject.hiddenLoginAction({ action: 'login', type, user, password })
             }
           },
           async signupWalletHidden(
@@ -378,6 +378,7 @@ export default defineComponent({
                   storeObject.hiddenLoginAction({})
                 }
                 storeObject.hiddenLoginAction({
+                  action: 'singup',
                   type,
                   walletEmail,
                   walletPassword,
@@ -391,6 +392,7 @@ export default defineComponent({
                 storeObject.hiddenLoginAction({})
               }
               storeObject.hiddenLoginAction({
+                action: 'singup',
                 type,
                 walletEmail,
                 walletPassword,
@@ -410,21 +412,21 @@ export default defineComponent({
             if (storeObject.hiddenLogin) {
               storeObject.hiddenLoginAction({})
             }
-            storeObject.hiddenLoginAction({ type: 'recovery', recovery: { type, data } })
+            storeObject.hiddenLoginAction({ action: 'recovery', type: 'recovery', recovery: { type, data } })
           },
           async loginWallet2fa(twoFACode: string) {
             routerObject.push('/2fa').catch(() => undefined)
             if (storeObject.hiddenLogin) {
               storeObject.hiddenLoginAction({})
             }
-            storeObject.hiddenLoginAction({ type: '2fa', twoFACode: twoFACode })
+            storeObject.hiddenLoginAction({ action: '2fa', type: '2fa', twoFACode: twoFACode })
           },
           async loginWallet2faSend(twoFACode: string) {
             routerObject.push('/2fa').catch(() => undefined)
             if (storeObject.hiddenLogin) {
               storeObject.hiddenLoginAction({})
             }
-            storeObject.hiddenLoginAction({ type: '2fasend', twoFACode: twoFACode })
+            storeObject.hiddenLoginAction({ action: '2fasend', type: '2fasend', twoFACode: twoFACode })
           },
           async isLoggedIn() {
             let counter = 0

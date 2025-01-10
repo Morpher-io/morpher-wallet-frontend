@@ -162,8 +162,6 @@ export const useWalletStore = defineStore('wallet', {
 
   actions: {
     hiddenLoginAction(loginData: any) {
-      // temp - log
-      console.log('hiddenLoginAction', loginData)
       this.hiddenLogin = loginData
     },
     setConnection(conn: Connection<CallSender>) {
@@ -294,7 +292,7 @@ export const useWalletStore = defineStore('wallet', {
       }
       Sentry.setUser({ id: '', email: '' })
     },
-    logout(clearHidden = true) {
+    logout() {
       this.email = ''
       this.hashedPassword = ''
       this.encryptedSeed = {}
@@ -303,11 +301,7 @@ export const useWalletStore = defineStore('wallet', {
       this.status = ''
       this.token = ''
       this.unlocked = false
-      if (clearHidden) {
-        console.log('clear login - logout')
-        this.hiddenLogin = undefined;
-      }
-
+      this.hiddenLogin = undefined;
       const email = localStorage.getItem('email')
       if (email) localStorage.setItem('lastEmail', email)
 
@@ -411,15 +405,14 @@ export const useWalletStore = defineStore('wallet', {
       const recaptchaToken: string = params.recaptchaToken
       const token: string = params.token
       const recoveryTypeId: number = params.recoveryTypeId
-      
-      this.logout(false)
+      this.hiddenLogin = undefined;
+      this.logout()
       return new Promise((resolve, reject) => {
         this.authRequested()
         sha256(password)
           .then((hashedPassword) => {
             getPayload(fetch_key || email, recaptchaToken)
               .then((payload) => {
-                console.log('clear login - fetch user')
                 this.hiddenLogin = undefined;
                 this.loginRetryCount = 0
                 this.setIpCountry(payload?.ip_country || '')

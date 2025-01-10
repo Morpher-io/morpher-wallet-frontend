@@ -189,11 +189,12 @@ export default defineComponent({
   methods: {
     executeHiddenLogin() {
       // temp - output
-      console.log('executeHiddenLogin login')
+      console.log('executeHiddenLogin login', this.store.hiddenLogin.action)
       try {
         if (
           this.store.hiddenLogin &&
           this.store.hiddenLogin.user &&
+          this.store.hiddenLogin.action === 'login' &&
           this.store.hiddenLogin.password &&
           this.store.hiddenLogin.type == 'email'
         ) {
@@ -204,6 +205,7 @@ export default defineComponent({
         } else if (
           this.store.hiddenLogin &&
           this.store.hiddenLogin.type &&
+          this.store.hiddenLogin.action === 'login' &&
           this.store.hiddenLogin.type.type == 'google'
         ) {
           this.passwordSignin = false
@@ -214,6 +216,7 @@ export default defineComponent({
         } else if (
           this.store.hiddenLogin &&
           this.store.hiddenLogin.type &&
+          this.store.hiddenLogin.action === 'login' &&
           this.store.hiddenLogin.type.type == 'apple'
         ) {
           this.passwordSignin = false
