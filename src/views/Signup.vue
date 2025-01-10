@@ -323,7 +323,7 @@ export default defineComponent({
     },
     async signupExecute(e: any) {
       // temp - log 
-      console.log('signupExecute', e)
+      console.log('signupExecute', e, this.store.loading, this.logonError)
       if (!crypto || !crypto.subtle) {
         this.logonError = getDictionaryValue('CRYPTO_DESCYPT_ACCESS')
 
