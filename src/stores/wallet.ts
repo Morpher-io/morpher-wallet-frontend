@@ -162,6 +162,8 @@ export const useWalletStore = defineStore('wallet', {
 
   actions: {
     hiddenLoginAction(loginData: any) {
+      // temp - log
+      console.log('hiddenLoginAction', loginData)
       this.hiddenLogin = loginData
     },
     setConnection(conn: Connection<CallSender>) {
