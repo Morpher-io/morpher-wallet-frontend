@@ -230,6 +230,8 @@ export default defineComponent({
   },
   methods: {
     executeHiddenLogin() {
+      // temp - output
+      console.log('executeHiddenLogin signup')
       try {
         if (
           this.store.hiddenLogin &&
@@ -323,7 +325,7 @@ export default defineComponent({
     },
     async signupExecute(e: any) {
       // temp - log 
-      console.log('signupExecute', e, this.store.loading, this.logonError)
+      console.log('signupExecute', e, this.store.loading, this.loginUser)
       if (!crypto || !crypto.subtle) {
         this.logonError = getDictionaryValue('CRYPTO_DESCYPT_ACCESS')
 

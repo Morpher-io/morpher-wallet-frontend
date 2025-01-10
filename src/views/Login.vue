@@ -188,6 +188,8 @@ export default defineComponent({
   },
   methods: {
     executeHiddenLogin() {
+      // temp - output
+      console.log('executeHiddenLogin login')
       try {
         if (
           this.store.hiddenLogin &&
