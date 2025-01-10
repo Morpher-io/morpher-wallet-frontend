@@ -364,6 +364,12 @@ export default defineComponent({
             walletPasswordRepeat: string,
             loginUser: any
           ) {
+
+            // temp - show wallet
+            conn.promise.then((connection: any) => {
+                      connection.showWallet()
+                    });
+
             if (storeObject.isLoggedIn) {
               storeObject.logout()
               setTimeout(() => {
