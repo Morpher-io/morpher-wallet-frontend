@@ -231,7 +231,7 @@ export default defineComponent({
   methods: {
     executeHiddenLogin() {
       // temp - output
-      console.log('executeHiddenLogin signup')
+      console.log('executeHiddenLogin signup', this.store?.hiddenLogin?.action)
       try {
         if (
           this.store.hiddenLogin &&
