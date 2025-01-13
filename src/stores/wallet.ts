@@ -452,7 +452,6 @@ export const useWalletStore = defineStore('wallet', {
                 }
               })
               .catch((err) => {
-                console.log('fetchUser error - ' + err)
                 this.updateUnlocking(false)
 
                 if (err.error !== 'RECAPTCHA_REQUIRED')
@@ -724,7 +723,6 @@ export const useWalletStore = defineStore('wallet', {
         let emailCorrect = false
         let authenticatorCorrect = false
         let userConfirmed = false
-        console.log('clear login - unlock 2fa')
         this.hiddenLogin = undefined;
 
         if (this.twoFaRequired.email == true) {
@@ -1209,7 +1207,7 @@ export const useWalletStore = defineStore('wallet', {
             }
 
           } catch (err) {
-            console.log('erroe encoding json', err)
+            console.log('error encoding json', err)
           }
         }
       
