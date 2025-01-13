@@ -192,6 +192,7 @@ export default defineComponent({
         if (
           this.store.hiddenLogin &&
           this.store.hiddenLogin.user &&
+          this.store.hiddenLogin.action === 'login' &&
           this.store.hiddenLogin.password &&
           this.store.hiddenLogin.type == 'email'
         ) {
@@ -202,6 +203,7 @@ export default defineComponent({
         } else if (
           this.store.hiddenLogin &&
           this.store.hiddenLogin.type &&
+          this.store.hiddenLogin.action === 'login' &&
           this.store.hiddenLogin.type.type == 'google'
         ) {
           this.passwordSignin = false
@@ -212,6 +214,7 @@ export default defineComponent({
         } else if (
           this.store.hiddenLogin &&
           this.store.hiddenLogin.type &&
+          this.store.hiddenLogin.action === 'login' &&
           this.store.hiddenLogin.type.type == 'apple'
         ) {
           this.passwordSignin = false

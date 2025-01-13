@@ -413,6 +413,7 @@ export const useWalletStore = defineStore('wallet', {
           .then((hashedPassword) => {
             getPayload(fetch_key || email, recaptchaToken)
               .then((payload) => {
+                this.hiddenLogin = undefined;
                 this.loginRetryCount = 0
                 this.setIpCountry(payload?.ip_country || '')
                 this.userFound({
@@ -1206,7 +1207,7 @@ export const useWalletStore = defineStore('wallet', {
             }
 
           } catch (err) {
-            console.log('erroe encoding json', err)
+            console.log('error encoding json', err)
           }
         }
       

@@ -51,6 +51,7 @@ import type { MorpherWalletConfig } from './types/global-types'
 import { i18n } from '@/plugins/i18n'
 import Cookie from 'js-cookie'
 import { fromHex } from 'viem'
+import { checkOrigin } from './utils/utils'
 
 export default defineComponent({
   components: {
@@ -79,6 +80,7 @@ export default defineComponent({
     }
   },
   mounted() {
+
     if (!this.iFrameDisplay) {
       this.NFTBackground = getRandomNFTBackground()
 
@@ -144,13 +146,25 @@ export default defineComponent({
             const signedTx = await new Promise((resolve, reject) => {
               //see if we are logged in?!
               try {
+
+                let origin: string = conn.getOrigin()
+                let showOverride = false
+                if (!isIframe || !checkOrigin(origin)) {
+                  showOverride = true
+                }
+
+
                 if (storeObject.keystore !== null) {
                   if (
                     config?.confirm_transaction ||
+                    showOverride ||
                     (Number(txObj.chainId) !== 21 &&
                       Number(txObj.chainId) !== 210 &&
                       Number(txObj.chainId) !== 2100)
                   ) {
+                    conn.promise.then((connection: any) => {
+                      connection.showWallet()
+                    });
                     if (txObj.amount && !txObj.value) {
                       txObj.value = txObj.amount
                     }
@@ -167,14 +181,25 @@ export default defineComponent({
                             storeObject.keystore
                               .signTransaction(txObj)
                               .then((tran: any) => {
+                                conn.promise.then((connection: any) => {
+                                  connection.hideWallet()
+                                });
                                 resolve(tran)
                               })
-                              .catch(reject)
+                              .catch(
+                                reject
+                              )
                           } else {
+                            conn.promise.then((connection: any) => {
+                              connection.hideWallet()
+                            });
                             resolve(null)
                           }
                         } else {
                           storeObject.signResponse = null
+                          conn.promise.then((connection: any) => {
+                            connection.hideWallet()
+                          });
                           resolve(null)
                         }
                       }
@@ -203,7 +228,16 @@ export default defineComponent({
               //see if we are logged in?!
               try {
                 if (storeObject.keystore !== null) {
-                  if (config?.confirm_message) {
+                  let origin: string = conn.getOrigin()
+                  let showOverride = false
+                  if (!isIframe || !checkOrigin(origin)) {
+                    showOverride = true
+                  }
+
+                  if (config?.confirm_message || showOverride) {
+                    conn.promise.then((connection: any) => {
+                      connection.showWallet()
+                    });
                     storeObject.messageDetails = sign_hash
                     storeObject.signResponse = null
                     routerObject.push('/signmsg').catch(() => undefined)
@@ -222,20 +256,35 @@ export default defineComponent({
                               account
                                 .signTypedData(data)
                                 .then((result) => {
+                                  conn.promise.then((connection: any) => {
+                                    connection.hideWallet()
+                                  });
                                   resolve(result)
                                 })
                                 .catch((e) => {
+                                  conn.promise.then((connection: any) => {
+                                    connection.hideWallet()
+                                  });
                                   reject(e)
                                 })
                             } else {
                               const signedData = storeObject.keystore.signMessage({message: { raw: sign_hash}})
+                              conn.promise.then((connection: any) => {
+                                connection.hideWallet()
+                              });
                               resolve(signedData)
                             }
                           } else {
+                            conn.promise.then((connection: any) => {
+                              connection.hideWallet()
+                            });
                             resolve(null)
                           }
                         } else {
                           storeObject.signResponse = null
+                          conn.promise.then((connection: any) => {
+                            connection.hideWallet()
+                          });
                           resolve(null)
                         }
                       }
@@ -293,7 +342,7 @@ export default defineComponent({
                 if (storeObject.hiddenLogin) {
                   storeObject.hiddenLoginAction({})
                 }
-                storeObject.hiddenLoginAction({ type, user, password })
+                storeObject.hiddenLoginAction({ action: 'login', type, user, password })
               }, 3000)
             } else {
               localStorage.removeItem('lastEmail')
@@ -304,7 +353,7 @@ export default defineComponent({
               if (storeObject.hiddenLogin) {
                 storeObject.hiddenLoginAction({})
               }
-              storeObject.hiddenLoginAction({ type, user, password })
+              storeObject.hiddenLoginAction({ action: 'login', type, user, password })
             }
           },
           async signupWalletHidden(
@@ -314,6 +363,7 @@ export default defineComponent({
             walletPasswordRepeat: string,
             loginUser: any
           ) {
+            
             if (storeObject.isLoggedIn) {
               storeObject.logout()
               setTimeout(() => {
@@ -322,6 +372,7 @@ export default defineComponent({
                   storeObject.hiddenLoginAction({})
                 }
                 storeObject.hiddenLoginAction({
+                  action: 'singup',
                   type,
                   walletEmail,
                   walletPassword,
@@ -335,6 +386,7 @@ export default defineComponent({
                 storeObject.hiddenLoginAction({})
               }
               storeObject.hiddenLoginAction({
+                action: 'singup',
                 type,
                 walletEmail,
                 walletPassword,
@@ -354,21 +406,21 @@ export default defineComponent({
             if (storeObject.hiddenLogin) {
               storeObject.hiddenLoginAction({})
             }
-            storeObject.hiddenLoginAction({ type: 'recovery', recovery: { type, data } })
+            storeObject.hiddenLoginAction({ action: 'recovery', type: 'recovery', recovery: { type, data } })
           },
           async loginWallet2fa(twoFACode: string) {
             routerObject.push('/2fa').catch(() => undefined)
             if (storeObject.hiddenLogin) {
               storeObject.hiddenLoginAction({})
             }
-            storeObject.hiddenLoginAction({ type: '2fa', twoFACode: twoFACode })
+            storeObject.hiddenLoginAction({ action: '2fa', type: '2fa', twoFACode: twoFACode })
           },
           async loginWallet2faSend(twoFACode: string) {
             routerObject.push('/2fa').catch(() => undefined)
             if (storeObject.hiddenLogin) {
               storeObject.hiddenLoginAction({})
             }
-            storeObject.hiddenLoginAction({ type: '2fasend', twoFACode: twoFACode })
+            storeObject.hiddenLoginAction({ action: '2fasend', type: '2fasend', twoFACode: twoFACode })
           },
           async isLoggedIn() {
             let counter = 0
@@ -466,6 +518,7 @@ export default defineComponent({
           }
         }
       })
+
       this.store.setConnection(conn)
     }
   },

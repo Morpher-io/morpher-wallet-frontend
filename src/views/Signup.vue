@@ -233,6 +233,7 @@ export default defineComponent({
       try {
         if (
           this.store.hiddenLogin &&
+          this.store.hiddenLogin.action === 'singup' &&
           this.store.hiddenLogin.walletEmail &&
           this.store.hiddenLogin.walletPassword &&
           this.store.hiddenLogin.type == 'email'
@@ -245,6 +246,7 @@ export default defineComponent({
         } else if (
           this.store.hiddenLogin &&
           this.store.hiddenLogin.type &&
+          this.store.hiddenLogin.action === 'singup' &&
           this.store.hiddenLogin.type.type == 'google'
         ) {
           this.passwordSignin = false
@@ -257,6 +259,7 @@ export default defineComponent({
         } else if (
           this.store.hiddenLogin &&
           this.store.hiddenLogin.type &&
+          this.store.hiddenLogin.action === 'singup' &&
           this.store.hiddenLogin.type.type == 'apple'
         ) {
           this.passwordSignin = false
