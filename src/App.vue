@@ -92,10 +92,10 @@ export default defineComponent({
       const routerObject = this.$router
 
       const conn = connectToParent({
-        parentOrigin: /.*/gm,
-          // import.meta.env.VITE_MODE === 'production'
-          //   ? /^https:\/\/[w]{0,3}\.?morpher\.com\/?.*$/
-          //   : /.*/gm,
+        parentOrigin:
+          import.meta.env.VITE_MODE === 'production'
+            ? /^https:\/\/[w]{0,3}\.?morpher\.com\/?.*$/
+            : /.*/gm,
 
         // Methods child is exposing to parent
         methods: {
@@ -181,7 +181,6 @@ export default defineComponent({
                             storeObject.keystore
                               .signTransaction(txObj)
                               .then((tran: any) => {
-                                console.log('hide wallet')
                                 conn.promise.then((connection: any) => {
                                   connection.hideWallet()
                                 });
@@ -364,12 +363,7 @@ export default defineComponent({
             walletPasswordRepeat: string,
             loginUser: any
           ) {
-
-            // temp - show wallet
-            conn.promise.then((connection: any) => {
-                      connection.showWallet()
-                    });
-
+            
             if (storeObject.isLoggedIn) {
               storeObject.logout()
               setTimeout(() => {

@@ -230,8 +230,6 @@ export default defineComponent({
   },
   methods: {
     executeHiddenLogin() {
-      // temp - output
-      console.log('executeHiddenLogin signup', this.store?.hiddenLogin?.action)
       try {
         if (
           this.store.hiddenLogin &&
@@ -327,8 +325,6 @@ export default defineComponent({
       }
     },
     async signupExecute(e: any) {
-      // temp - log 
-      console.log('signupExecute', e, this.store.loading, this.loginUser)
       if (!crypto || !crypto.subtle) {
         this.logonError = getDictionaryValue('CRYPTO_DESCYPT_ACCESS')
 
@@ -368,8 +364,6 @@ export default defineComponent({
         token = this.loginUser.token
       }
 
-      // temp - log 
-      console.log('recoveryTypeId', recoveryTypeId)
       if (recoveryTypeId == 1) {
         this.passwordChecks = this.checkPassword(
           this.walletPassword,
@@ -416,15 +410,6 @@ export default defineComponent({
       }
 
       const recaptchaToken = this.recaptchaToken
-
-      // temp - log 
-      console.log('createWallet', {
-        email,
-        recaptchaToken,
-        token: token,
-        recoveryTypeId: recoveryTypeId,
-        fetch_key
-      })
 
       this.showSpinner('Creating Wallet...')
       this.createWallet({
