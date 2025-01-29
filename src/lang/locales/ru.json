@@ -272,5 +272,15 @@
     "ISSUES_FOUND": "Обнаружены проблемы",
     "SETTINGS_TITLE": "Настройки",
     "TRUSTED_ACCOUNT": "Восстановление через доверенный аккаунт"
+  },
+  "transaction": {
+    "CONTRACT": "Контракт",
+    "DOMAIN": "Домен",
+    "SIGN_DATA": "Сообщение для подписи",
+    "SIGN_DATA_TYPED": "Детали объекта",
+    "SIGN_DESCRIPTION": "Запрашивается ваша подпись",
+    "SIGN_DESCRIPTION_TYPED": "Запрашивается ваша подпись для этих данных",
+    "SIGN_MESSAGE": "Подписать сообщение",
+    "SIGN_TYPED_DATA": "Подписать типизированные данные"
   }
 }

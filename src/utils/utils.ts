@@ -17,6 +17,21 @@ function downloadEncryptedKeystore(exportedSeed: any, account: string) {
   )
 }
 
+export const roundFormatter = (param: any) => {
+	const price = parseFloat(param);
+	const abs = Math.abs(price);
+	let round = 0;
+	if (10000 > abs && abs >= 10) round = 2;
+	else if (10 > abs && abs >= 1) round = 3;
+	else if (1 > abs && abs >= 0.1) round = 4;
+	else if (0.1 > abs && abs >= 0.01) round = 5;
+	else if (0.01 > abs && abs >= 0.001) round = 6;
+	else if (0.001 > abs && abs >= 0.0001) round = 7;
+	else if (0.0001 > abs && abs >= 0.00001) round = 8;
+	else if (0.00001 > abs) round = 9;
+	return price ? price.toFixed(round) : '0';
+}
+
 function sortObject(object: any) {
   if (typeof object != 'object' || object instanceof Array)
     // Not to sort the array

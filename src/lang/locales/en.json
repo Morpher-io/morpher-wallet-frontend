@@ -57,6 +57,16 @@
     "ENTER_CODE_EMAIL": "Enter email code"
     
   },
+  "transaction": {
+    "SIGN_MESSAGE": "Sign Message",
+    "SIGN_TYPED_DATA": "Sign Typed Data",
+    "SIGN_DESCRIPTION": "Your signature is being requested",
+    "SIGN_DESCRIPTION_TYPED": "Your signature is being requested for this data",
+    "DOMAIN": "Domain",
+    "CONTRACT": "Contract",
+    "SIGN_DATA": "Mesage To Sign",
+    "SIGN_DATA_TYPED": "Object Details"
+  },
   "auth": {
     "APPLE": "Apple",
     "LOGIN": "Sign In",

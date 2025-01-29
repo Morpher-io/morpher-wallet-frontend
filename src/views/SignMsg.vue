@@ -3,14 +3,15 @@
     <spinner v-model="showSpinner" v-bind:status="status"></spinner>
     <div class="container">
       <spinner v-model="showSpinner" v-bind:status="status"></spinner>
-      <h2 class="title">Sign Transaction</h2>
-      <p class="subtitle">Your signature is being requested</p>
+      <h2 class="title">{{typedData ?  $t('transaction.SIGN_TYPED_DATA')  :  $t('transaction.SIGN_MESSAGE')  }}</h2>
+      <p class="subtitle">{{typedData ?  $t('transaction.SIGN_DESCRIPTION_TYPED')  :  $t('transaction.SIGN_DESCRIPTION')  }}</p>
+
 
       <div class="field">
-        <label class="label">{{ $t('common.MESSAGE') }}</label>
+        <label class="label">{{ typedData ?  $t('transaction.SIGN_DATA_TYPED')  :  $t('transaction.SIGN_DATA')  }}</label>
         <div class="settings-data user-details">
-          <div class="details">
-            {{ store.messageDetails }}
+          <div class="details" v-html="messageFormatted">
+            
           </div>
         </div>
       </div>
@@ -32,11 +33,13 @@
 <script lang="ts">
 import { Authenticated } from '@/mixins/authenticated'
 import { Global } from '@/mixins/global'
+import { i18n } from '@/plugins/i18n'
+import { hexToString, parseTransaction } from 'viem';
 
 import { defineComponent } from 'vue'
 
 export default defineComponent({
-  mixins: [Authenticated, Global],
+  mixins: [ Global],
 
   methods: {
     sign() {
@@ -46,12 +49,85 @@ export default defineComponent({
     cancel() {
       this.store.signResponse = 'cancel'
       this.$router.push('/').catch(() => undefined)
+    },
+    formatMessage() {
+      let message = this.store.messageDetails
+      if ( message.includes('{')) {
+
+        try {
+          this.typedData = true
+          let jObject = JSON.parse( message)
+            if (jObject.message) {
+            let mObject = jObject.message
+            let keys = Object.keys(mObject)
+
+            let msg = '';
+            msg += `<b>${i18n.t('transaction.DOMAIN').toString()}:</b>&nbsp;${jObject.domain.name}<br>`
+            msg += `<b>${i18n.t('transaction.CONTRACT').toString()}:</b>&nbsp;${jObject.domain.verifyingContract}<br><br>`            
+
+            keys.forEach(key => {
+              msg += `<b>${key}:</b>&nbsp;${mObject[key]}<br>`
+            })
+
+
+            this.messageFormatted = msg
+          } else {
+            this.messageFormatted = this.store.messageDetails
+          }
+        } catch (err) {
+          this.messageFormatted = this.store.messageDetails
+        }
+      } else {
+
+        if (message.includes('0x')) {
+          try {
+            let msg = hexToString(message)
+
+            msg = msg.replace(/\n/g, '<br>')
+
+            this.messageFormatted = msg
+
+          } catch(err) {
+            this.messageFormatted = message
+          }
+
+        } else {
+          this.messageFormatted = message
+        }
+        
+
+        
+      }
+      
+      
+    },
+    messageUpdated() {
+      this.formatMessage()
+}
+  },
+  async mounted() {
+    this.formatMessage()
+  },
+  data() {
+    return {
+      messageFormatted: '',
+      typedData: false
     }
+  },
+  watch: {
+    'store.messageDetails': [
+      {
+        handler: 'messageUpdated'
+      }
+    ]
   }
 })
 </script>
 
 <style lang="scss" scoped>
+.details {
+  overflow-wrap: break-word;
+}
 .card {
   padding: 20px;
   border-radius: 10px;
