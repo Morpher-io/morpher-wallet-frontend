@@ -10,7 +10,7 @@
 </template>
 
 <script lang="ts">
-import Vue, { defineComponent } from 'vue'
+import { defineComponent } from 'vue'
 import Dots from './Dots.vue'
 
 // Define the props by using Vue's canonical way.

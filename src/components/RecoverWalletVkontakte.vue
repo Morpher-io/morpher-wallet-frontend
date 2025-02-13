@@ -20,7 +20,7 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   components: {
-    ChangePassword
+    ChangePassword: ChangePassword as any
   },
   mixins: [Global],
   data() {

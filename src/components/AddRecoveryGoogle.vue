@@ -38,7 +38,7 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   components: {
-    LoginGoogle
+    LoginGoogle: LoginGoogle as any
   },
   mixins: [Global, Authenticated],
   data() {

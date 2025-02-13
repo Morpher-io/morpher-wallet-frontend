@@ -98,8 +98,8 @@ import { sha256 } from './../utils/cryptoFunctions'
 
 export default defineComponent({
   components: {
-    LoginApple,
-    LoginGoogle,
+    LoginApple: LoginApple as any,
+    LoginGoogle: LoginGoogle as any,
     [Jazzicon.name]: Jazzicon
   },
   mixins: [Global, Recaptcha],

@@ -129,11 +129,11 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   components: {
-    RecoverWalletVkontakte,
-    RecoverWalletFacebook,
-    RecoverWalletGoogle,
-    RecoverWalletApple,
-    ChangePassword
+    RecoverWalletVkontakte: RecoverWalletVkontakte as any,
+    RecoverWalletFacebook: RecoverWalletFacebook as any,
+    RecoverWalletGoogle: RecoverWalletGoogle as any,
+    RecoverWalletApple: RecoverWalletApple as any,
+    ChangePassword: ChangePassword as any
   },
   mixins: [Authenticated, Global, Recaptcha],
   data() {

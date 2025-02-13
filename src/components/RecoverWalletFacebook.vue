@@ -26,7 +26,7 @@ import { defineComponent } from 'vue'
 export default defineComponent({
   components: {
     HFaceBookLogin,
-    ChangePassword
+    ChangePassword: ChangePassword as any
   },
   mixins: [Global],
   data() {

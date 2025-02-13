@@ -186,9 +186,9 @@ import type { TypePasswordCheck } from '@/types/global-types'
 
 export default defineComponent({
   components: {
-    PasswordMeter,
-    LoginApple,
-    LoginGoogle
+    PasswordMeter: PasswordMeter as any,
+    LoginApple: LoginApple as any,
+    LoginGoogle: LoginGoogle as any
   },
   mixins: [Global, Recaptcha],
   data() {

@@ -149,7 +149,7 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   components: {
-    ConfirmAccess
+    ConfirmAccess: ConfirmAccess as any
   },
   mixins: [Global, Authenticated],
   data() {

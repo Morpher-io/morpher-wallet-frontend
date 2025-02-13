@@ -64,8 +64,8 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   components: {
-    AccountDeletion,
-    ConfirmAccess
+    AccountDeletion: AccountDeletion as any,
+    ConfirmAccess: ConfirmAccess as any
   },
   mixins: [Authenticated, Global],
   data() {

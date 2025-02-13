@@ -19,6 +19,22 @@ export default defineConfig({
     },
     
   },
+  build: {
+    sourcemap: true,
+    commonjsOptions: { 
+      transformMixedEsModules: true 
+    },
+    rollupOptions: {
+      output: {
+        manualChunks(id: any) {
+          const HugeLibraries = ["highcharts", "highcharts-vue", "@firebase", "lottie-web", "typescript", "what-country", "@walletconnect", "@portis", "buefy", "chart.js", "@sentry", "@apollo", "@vue"]; // modify as required based on libraries in use
+          if (HugeLibraries.some((libName) => id.includes(`node_modules/${libName}`))) {
+            return id.toString().split("node_modules/")[1].split("/")[0].toString();
+          }
+        }
+      }
+    }
+  },
   optimizeDeps: {
     include: [
       'color',

@@ -55,9 +55,9 @@ import { checkOrigin } from './utils/utils'
 
 export default defineComponent({
   components: {
-    Spinner,
-    NetworkError,
-    Footer,
+    Spinner: Spinner as any,
+    NetworkError: NetworkError as any,
+    Footer: Footer as any,
     RouterView
   },
   computed: {
