@@ -15,8 +15,8 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   components: {
-    LoginGoogle,
-    ChangePassword
+    LoginGoogle: LoginGoogle as any,
+    ChangePassword: ChangePassword as any
   },
   mixins: [Global],
   data() {

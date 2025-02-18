@@ -143,9 +143,9 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   components: {
-    ChangePassword,
-    ChangeEmail,
-    Change2FA,
+    ChangePassword: ChangePassword as any,
+    ChangeEmail: ChangeEmail as any,
+    Change2FA: Change2FA as any,
     AccountRecovery
   },
   mixins: [Authenticated, Global],

@@ -27,15 +27,23 @@
 
       <div class="divider just-space"></div>
 
-      <div class="card column">
-        <p class="has-text-weight-medium">{{ $t('common.SEND') }}</p>
+      <div class="card column" v-if="isMPH || store.transactionDetails.value && Number(store.transactionDetails.value) > 0" >
         <p v-if="isMPH" class="eth_balance">{{ roundFormatter(mphValue) }} MPH</p>
         <p v-else class="eth_balance">
           {{ roundFormatter(store.transactionDetails.value / Math.pow(10, 18)) }} ETH
         </p>
       </div>
 
-      <div class="payment-description">
+      <div class="field" v-if="contractData">
+        <label class="label">{{ contract }}</label>
+        <div class="settings-data user-details">
+          <div class="details" v-html="contractData">
+            
+          </div>
+        </div>
+      </div>
+
+      <div class="payment-description" v-else>
         <div class="details-group">
           <p class="subtitle has-text-weight-medium">{{ $t('common.GAS_FEE') }}</p>
           <p class="text">
@@ -126,17 +134,23 @@
 <script lang="ts">
 import { Authenticated } from '@/mixins/authenticated'
 import { Global } from '@/mixins/global'
-import { copyToClipboard } from '@/utils/utils'
+import { copyToClipboard, roundFormatter } from '@/utils/utils'
 import { defineComponent } from 'vue'
-
+import { hexToString, parseTransaction, decodeFunctionData, getAbiItem } from 'viem';
+import { morpherOracleAbi } from '@/utils/abis'
 export default defineComponent({
-  mixins: [Global, Authenticated],
+  mixins: [Global],
   data() {
     return {
       copyTextSrc: this.$t('common.COPY_TO_CLIPBOARD').toString(),
       copyTextDest: this.$t('common.COPY_TO_CLIPBOARD').toString(),
-      copyToClipboard: copyToClipboard
+      copyToClipboard: copyToClipboard,
+      contractData: '' as string | undefined,
+      contract: ''
     }
+  },
+  mounted() {
+    this.formatTransaction()
   },
   computed: {
     chainName() {
@@ -160,7 +174,15 @@ export default defineComponent({
         return 'Kovan Testnet'
       }
 
-      return 'Unknown'
+      if (this.store.transactionDetails && Number(this.store.transactionDetails.chainId) === 11155111) {
+        return 'Sepolia'
+      }
+
+      if (this.store.transactionDetails && Number(this.store.transactionDetails.chainId) === 137) {
+        return 'Polygon Mainchain'
+      }
+
+      return this.store.transactionDetails.chainId
     },
     mphValue() {
       if (this.store.transactionDetails && this.store.transactionDetails.mph_value) {
@@ -174,6 +196,61 @@ export default defineComponent({
     }
   },
   methods: {
+    formatTransaction() {
+      if (this.store.transactionDetails.data) {
+        try {
+          const data = decodeFunctionData({
+            abi: morpherOracleAbi,
+            data: this.store.transactionDetails.data
+          })
+          if (data && data.functionName) {
+
+            let msg = '';
+            
+
+            
+            let functionName = (data as any).functionName;
+            let contract = 'Morpher Oracle - ' + functionName;
+            this.contract =contract
+            // @ts-ignore
+            const encodedData:any = getAbiItem({
+                          abi: morpherOracleAbi,
+              name: functionName, 
+            })
+            if (encodedData) {
+              let components = encodedData.inputs[0].components
+              let item = 0
+              
+              components.forEach((component: any) => {
+                let dat = data.args[item].toString()
+                if (component.name == '_openMPHTokenAmount' && dat !== '0') {
+                  dat = roundFormatter(Number(dat) / 10**18) + ' MPH'
+                }
+
+                if (component.name == '_orderLeverage' && dat !== '0') {
+                  dat = roundFormatter(Number(dat) / 10**8) 
+                }
+      
+                msg += `<b>${component.name}:</b>&nbsp;${ dat }<br>`
+                item +=1
+              } )
+
+            }
+            
+            this.contractData = msg
+          
+
+          }
+        } catch (err) {
+          this.contractData = undefined
+        }
+
+      }
+      
+
+      
+      
+    },
     sign() {
       this.store.signResponse = 'confirm'
       this.$router.push('/').catch(() => undefined)
@@ -203,6 +280,7 @@ export default defineComponent({
 <style lang="scss" scoped>
 .eth_balance {
   font-size: 24px;
+  margin: 10px
 }
 
 .transaction-breakdown {
@@ -246,17 +324,26 @@ export default defineComponent({
   }
 }
 
+.label {
+  font-size: 18px!important
+}
+
+.details {
+  overflow-wrap: break-word;
+}
+
 .payment-description {
-  padding: 15px;
+  padding: 10px;
   background: #f9f9f9;
-  margin: 0 10px;
+  margin:  10px;
   position: relative;
   border-radius: 0 0 10px 10px;
-
+ 
   .details-group {
     display: flex;
     align-items: center;
     margin-bottom: 5px;
+    height: 25px;
 
     .subtitle {
       margin: 0;

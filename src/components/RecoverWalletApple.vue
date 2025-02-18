@@ -13,8 +13,8 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   components: {
-    LoginApple,
-    ChangePassword
+    LoginApple: LoginApple as any,
+    ChangePassword: ChangePassword as any
   },
   mixins: [Global],
   data() {

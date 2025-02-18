@@ -135,7 +135,7 @@ import type { TypePasswordCheck } from '@/types/global-types'
 
 export default defineComponent({
   components: {
-    PasswordMeter
+    PasswordMeter: PasswordMeter as any
   },
   mixins: [Global, Authenticated],
   data() {

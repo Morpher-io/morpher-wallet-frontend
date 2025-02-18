@@ -1,21 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
-import Wallet from '../views/Wallet.vue'
-import Login from '../views/Login.vue'
-import Signup from '../views/Signup.vue'
-import TwoFA from '../views/TwoFA.vue'
-import Settings from '../views/Settings.vue'
-import Unlock from '../views/Unlock.vue'
-import SignTx from '../views/SignTx.vue'
-import SignMsg from '../views/SignMsg.vue'
-import Recovery from '../views/Recovery.vue'
-import EmailSettings from '../views/EmailSettings.vue'
-import PasswordSettings from '../views/PasswordSettings.vue'
-import TwoFactorSettings from '../views/TwoFactorSettings.vue'
-import KeysSettings from '../views/KeysSettings.vue'
-import RecoverySettings from '../views/RecoverySettings.vue'
-import DeleteSettings from '../views/DeleteSettings.vue'
 import { useWalletStore } from '@/stores/wallet'
-import { isConditionalExpression } from 'typescript'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -23,17 +7,17 @@ const router = createRouter({
     {
       path: '/login',
       name: 'Login',
-      component: Login
+      component: () => import(/* webpackChunkName: "Login" */ '../views/Login.vue'),
     },
     {
       path: '/signup',
       name: 'Signup',
-      component: Signup
+      component: () => import(/* webpackChunkName: "Signup" */ '../views/Signup.vue'),
     },
     {
       path: '/settings',
       name: 'Settings',
-      component: Settings,
+      component: () => import(/* webpackChunkName: "Settings" */ '../views/Settings.vue'),
       meta: {
         requiresAuth: true
       }
@@ -41,7 +25,7 @@ const router = createRouter({
     {
       path: '/settings/email',
       name: 'EmailSettings',
-      component: EmailSettings,
+      component: () => import(/* webpackChunkName: "EmailSettings" */ '../views/EmailSettings.vue'),
       meta: {
         requiresAuth: true
       }
@@ -49,7 +33,7 @@ const router = createRouter({
     {
       path: '/settings/password',
       name: 'PasswordSettings',
-      component: PasswordSettings,
+      component: () => import(/* webpackChunkName: "PasswordSettings" */ '../views/PasswordSettings.vue'),
       meta: {
         requiresAuth: true
       }
@@ -57,7 +41,7 @@ const router = createRouter({
     {
       path: '/settings/2fa',
       name: 'TwoFactorSettings',
-      component: TwoFactorSettings,
+      component: () => import(/* webpackChunkName: "TwoFactorSettings" */ '../views/TwoFactorSettings.vue'),
       meta: {
         requiresAuth: true
       }
@@ -65,7 +49,7 @@ const router = createRouter({
     {
       path: '/settings/keys',
       name: 'KeysSettings',
-      component: KeysSettings,
+      component: () => import(/* webpackChunkName: "KeysSettings" */ '../views/KeysSettings.vue'),
       meta: {
         requiresAuth: true
       }
@@ -73,7 +57,7 @@ const router = createRouter({
     {
       path: '/settings/recovery',
       name: 'RecoverySettings',
-      component: RecoverySettings,
+      component: () => import(/* webpackChunkName: "RecoverySettings" */ '../views/RecoverySettings.vue'),
       meta: {
         requiresAuth: true
       }
@@ -81,7 +65,7 @@ const router = createRouter({
     {
       path: '/settings/delete',
       name: 'DeleteSettings',
-      component: DeleteSettings,
+      component: () => import(/* webpackChunkName: "DeleteSettings" */ '../views/DeleteSettings.vue'), //: DeleteSettings,
       meta: {
         requiresAuth: true
       }
@@ -89,12 +73,12 @@ const router = createRouter({
     {
       path: '/recovery',
       name: 'Recovery',
-      component: Recovery
+      component: () => import(/* webpackChunkName: "Recovery" */ '../views/Recovery.vue'),
     },
     {
       path: '/2fa',
       name: 'TwoFA',
-      component: TwoFA,
+      component: () => import(/* webpackChunkName: "TwoFA" */ '../views/TwoFA.vue'),
       meta: {
         requires2fa: true
       }
@@ -102,12 +86,12 @@ const router = createRouter({
     {
       path: '/unlock',
       name: 'Unlock',
-      component: Unlock
+      component: () => import(/* webpackChunkName: "Unlock" */ '../views/Unlock.vue'),
     },
     {
       path: '/signtx',
       name: 'SignTx',
-      component: SignTx,
+      component: () => import(/* webpackChunkName: "SignTx" */ '../views/SignTx.vue'),
       meta: {
         requiresAuth: true
       }
@@ -115,7 +99,7 @@ const router = createRouter({
     {
       path: '/signmsg',
       name: 'SignMsg',
-      component: SignMsg,
+      component: () => import(/* webpackChunkName: "SignMsg" */ '../views/SignMsg.vue'), 
       meta: {
         requiresAuth: true
       }
@@ -123,7 +107,7 @@ const router = createRouter({
     {
       path: '/',
       name: 'Wallet',
-      component: Wallet,
+      component: () => import(/* webpackChunkName: "Wallet" */ '../views/Wallet.vue'),
       meta: {
         requiresAuth: true
       }

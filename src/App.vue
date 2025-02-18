@@ -55,9 +55,9 @@ import { checkOrigin } from './utils/utils'
 
 export default defineComponent({
   components: {
-    Spinner,
-    NetworkError,
-    Footer,
+    Spinner: Spinner as any,
+    NetworkError: NetworkError as any,
+    Footer: Footer as any,
     RouterView
   },
   computed: {
@@ -160,6 +160,8 @@ export default defineComponent({
                     showOverride ||
                     (Number(txObj.chainId) !== 21 &&
                       Number(txObj.chainId) !== 210 &&
+                      Number(txObj.chainId) !== 11155111 &&
+                      Number(txObj.chainId) !== 137 &&
                       Number(txObj.chainId) !== 2100)
                   ) {
                     conn.promise.then((connection: any) => {

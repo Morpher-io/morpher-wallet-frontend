@@ -43,8 +43,8 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   components: {
-    ChangeEmail,
-    Change2FAEmail
+    ChangeEmail: ChangeEmail as any,
+    Change2FAEmail: Change2FAEmail as any
   },
   mixins: [Authenticated, Global],
   data() {

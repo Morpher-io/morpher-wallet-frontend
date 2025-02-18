@@ -152,11 +152,11 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   components: {
-    AddRecoveryGoogle,
-    AddRecoveryFacebook,
-    AddRecoveryVkontakte,
-    ConfirmAccess,
-    AddRecoveryApple
+    AddRecoveryGoogle: AddRecoveryGoogle as any,
+    AddRecoveryFacebook: AddRecoveryFacebook as any,
+    AddRecoveryVkontakte: AddRecoveryVkontakte as any,
+    ConfirmAccess: ConfirmAccess as any,
+    AddRecoveryApple: AddRecoveryApple as any
   },
   mixins: [Authenticated, Global],
   data() {

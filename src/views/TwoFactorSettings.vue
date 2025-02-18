@@ -82,10 +82,10 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   components: {
-    Change2FA,
-    ConfirmAccess,
-    ChangeAuthenticator,
-    Change2FAEmail
+    Change2FA: Change2FA as any,
+    ConfirmAccess: ConfirmAccess as any,
+    ChangeAuthenticator: ChangeAuthenticator as any,
+    Change2FAEmail: Change2FAEmail as any
   },
   mixins: [Authenticated, Global],
   data() {

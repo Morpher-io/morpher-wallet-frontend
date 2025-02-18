@@ -272,5 +272,15 @@
     "ISSUES_FOUND": "Gefundene Probleme",
     "SETTINGS_TITLE": "Einstellungen",
     "TRUSTED_ACCOUNT": "Vertrauenswürdiges Konto wiederherstellen"
+  },
+  "transaction": {
+    "CONTRACT": "Vertrag",
+    "DOMAIN": "Domäne",
+    "SIGN_DATA": "Nachricht zum Signieren",
+    "SIGN_DATA_TYPED": "Objektdetails",
+    "SIGN_DESCRIPTION": "Ihre Unterschrift wird angefordert",
+    "SIGN_DESCRIPTION_TYPED": "Ihre Unterschrift wird für diese Daten angefordert",
+    "SIGN_MESSAGE": "Nachricht signieren",
+    "SIGN_TYPED_DATA": "Typisierte Daten signieren"
   }
 }

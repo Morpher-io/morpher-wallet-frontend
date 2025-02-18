@@ -85,8 +85,8 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   components: {
-    LoginApple,
-    LoginGoogle
+    LoginApple: LoginApple as any,
+    LoginGoogle: LoginGoogle as any
   },
   mixins: [Global, Authenticated],
   data() {

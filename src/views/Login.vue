@@ -86,7 +86,7 @@
         </div>
 
         <div class="error" v-if="logonError">
-          <p data-cy="loginError" class="errorbox">
+          <div data-cy="loginError" class="errorbox">
             <img src="@/assets/img/warning.svg" alt="warning-icon">
             <div>
               <div v-html="logonError"></div>
@@ -97,7 +97,7 @@
                 {{ $t('auth.RECOVER_YOUR_WALLET_QUESTION') }}
               </router-link>
             </div>
-          </p>
+          </div>
         </div>
 
         <button
@@ -140,8 +140,8 @@ import { defineComponent } from 'vue'
 
 export default defineComponent({
   components: {
-    LoginApple,
-    LoginGoogle
+    LoginApple: LoginApple as any,
+    LoginGoogle: LoginGoogle as any
   },
   mixins: [Global, Recaptcha],
   data() {
