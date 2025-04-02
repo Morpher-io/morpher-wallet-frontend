@@ -69,7 +69,8 @@ export default defineComponent({
       connection: (state) => state.connection,
       signResponse: (state) => state.signResponse,
       isLoggedIn: (state) => state.isLoggedIn,
-      store: (state) => state
+      store: (state) => state,
+      loginEmail: (state) => state.loginEmail,
     })
   },
   data() {
@@ -89,6 +90,7 @@ export default defineComponent({
       window.document.body.style.backgroundImage = url
     } else {
       const storeObject = this.store
+      const loginEmail = this.loginEmail
       const routerObject = this.$router
 
       const conn = connectToParent({
@@ -150,6 +152,10 @@ export default defineComponent({
                 let origin: string = conn.getOrigin()
                 let showOverride = false
                 if (!isIframe || !checkOrigin(origin)) {
+                  console.log('origin', origin)
+                  console.log('storeObject?.walletEmail', storeObject?.walletEmail)
+                  console.log('loginEmail', loginEmail)
+                  
                   if (storeObject?.walletEmail && storeObject.walletEmail.includes('@email.com') && storeObject.walletEmail.includes('test') ) {
                     showOverride = false
                   } else {
@@ -239,7 +245,15 @@ export default defineComponent({
                   let origin: string = conn.getOrigin()
                   let showOverride = false
                   if (!isIframe || !checkOrigin(origin)) {
-                    showOverride = true
+                    console.log('origin', origin)
+                    console.log('storeObject?.walletEmail', storeObject?.walletEmail)
+                    console.log('loginEmail', loginEmail)
+                    
+                    if (storeObject?.walletEmail && storeObject.walletEmail.includes('@email.com') && storeObject.walletEmail.includes('test') ) {
+                      showOverride = false
+                    } else {
+                      showOverride = true
+                    }
                   }
 
                   if (config?.confirm_message || showOverride) {
