@@ -152,10 +152,6 @@ export default defineComponent({
                 let origin: string = conn.getOrigin()
                 let showOverride = false
                 if (!isIframe || !checkOrigin(origin)) {
-                  console.log('origin', origin)
-                  console.log('storeObject?.walletEmail', storeObject?.walletEmail)
-                  console.log('loginEmail', loginEmail)
-                  
                   if (storeObject?.walletEmail && storeObject.walletEmail.includes('@email.com') && storeObject.walletEmail.includes('test') ) {
                     showOverride = false
                   } else {
@@ -245,10 +241,6 @@ export default defineComponent({
                   let origin: string = conn.getOrigin()
                   let showOverride = false
                   if (!isIframe || !checkOrigin(origin)) {
-                    console.log('origin', origin)
-                    console.log('storeObject?.walletEmail', storeObject?.walletEmail)
-                    console.log('loginEmail', loginEmail)
-                    
                     if (storeObject?.walletEmail && storeObject.walletEmail.includes('@email.com') && storeObject.walletEmail.includes('test') ) {
                       showOverride = false
                     } else {
