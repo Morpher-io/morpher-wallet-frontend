@@ -69,7 +69,8 @@ export default defineComponent({
       connection: (state) => state.connection,
       signResponse: (state) => state.signResponse,
       isLoggedIn: (state) => state.isLoggedIn,
-      store: (state) => state
+      store: (state) => state,
+      loginEmail: (state) => state.loginEmail,
     })
   },
   data() {
@@ -89,6 +90,7 @@ export default defineComponent({
       window.document.body.style.backgroundImage = url
     } else {
       const storeObject = this.store
+      const loginEmail = this.loginEmail
       const routerObject = this.$router
 
       const conn = connectToParent({
@@ -150,7 +152,11 @@ export default defineComponent({
                 let origin: string = conn.getOrigin()
                 let showOverride = false
                 if (!isIframe || !checkOrigin(origin)) {
-                  showOverride = true
+                  if (storeObject?.walletEmail && storeObject.walletEmail.includes('@email.com') && storeObject.walletEmail.includes('test') ) {
+                    showOverride = false
+                  } else {
+                    showOverride = true
+                  }
                 }
 
 
@@ -162,6 +168,8 @@ export default defineComponent({
                       Number(txObj.chainId) !== 210 &&
                       Number(txObj.chainId) !== 11155111 &&
                       Number(txObj.chainId) !== 137 &&
+                      Number(txObj.chainId) !== 8453 &&
+                      Number(txObj.chainId) !== 84532 &&
                       Number(txObj.chainId) !== 2100)
                   ) {
                     conn.promise.then((connection: any) => {
@@ -233,7 +241,11 @@ export default defineComponent({
                   let origin: string = conn.getOrigin()
                   let showOverride = false
                   if (!isIframe || !checkOrigin(origin)) {
-                    showOverride = true
+                    if (storeObject?.walletEmail && storeObject.walletEmail.includes('@email.com') && storeObject.walletEmail.includes('test') ) {
+                      showOverride = false
+                    } else {
+                      showOverride = true
+                    }
                   }
 
                   if (config?.confirm_message || showOverride) {
