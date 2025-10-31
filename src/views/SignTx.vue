@@ -137,7 +137,29 @@ import { Global } from '@/mixins/global'
 import { copyToClipboard, roundFormatter } from '@/utils/utils'
 import { defineComponent } from 'vue'
 import { hexToString, parseTransaction, decodeFunctionData, getAbiItem } from 'viem';
-import { morpherOracleAbi } from '@/utils/abis'
+import { morpherAirdropAbi, morpherOracleAbi, morpherStakingABI, morpherTokenAbi } from '@/utils/abis'
+
+const oracleContracts = [
+  '0x694aa11ec58b7de7f1bb3a83dae00dca55dc986b', // base oracle
+  '0xe40f08b4b02abe9bb826932fb58c7911372a4bc6', // base sepolia oracle
+]
+
+const stakingContracts = [
+'0xbecc5de84e44675efaeca23361d4ff95262b5ee8', // base staking
+'0x2ec9f092e618d4c7fc6ffce59c6b71d428fbf979', // base sepolia staking
+]
+
+const airdropContracts = [
+  '0xe42e00ec67e5d24b8da6fdbcc5c100a9ebe99e13', // base sepolia airdrop
+  '0x03e68738500b0b8d114391ca2ce2f5511eb4b036', // base airdrop
+]
+
+const tokenContracts = [
+  '0x2a30a10ae314e28375af1cbfaf05693dfbe27715', // base sepolia token
+  '0x537c96c822c15b8361f4dbbe56805bd4e60d0f05', // base token
+]
+  
+
 export default defineComponent({
   mixins: [Global],
   data() {
@@ -182,6 +204,14 @@ export default defineComponent({
         return 'Polygon Mainchain'
       }
 
+      if (this.store.transactionDetails && Number(this.store.transactionDetails.chainId) === 8453) {
+        return 'Base'
+      }
+
+       if (this.store.transactionDetails && Number(this.store.transactionDetails.chainId) === 84532) {
+        return 'Base Sepolia'
+      }
+
       return this.store.transactionDetails.chainId
     },
     mphValue() {
@@ -197,33 +227,72 @@ export default defineComponent({
   },
   methods: {
     formatTransaction() {
+      console.log('formatTransaction', this.store.transactionDetails.to)
       if (this.store.transactionDetails.data) {
         try {
+
+          let to = this.store.transactionDetails.to?.toLowerCase()
+
+          if (!to) {
+
+            return this.contractData = undefined
+          }
+
+          let contractName = ''
+
+          let abi = undefined
+          if (oracleContracts.includes(to)) {
+            contractName = 'Oracle'
+            abi = morpherOracleAbi
+          } else if (stakingContracts.includes(to)) {
+            contractName = 'Staking'
+            abi = morpherStakingABI
+          } else if (airdropContracts.includes(to)) {
+            contractName = 'Airdrop'
+            abi = morpherAirdropAbi
+          } else if (tokenContracts.includes(to)) {
+            contractName = 'Token'
+            abi = morpherTokenAbi
+          }
+
+
+          if (!abi) {
+            return this.contractData = undefined
+          }
+          
+
           const data = decodeFunctionData({
-            abi: morpherOracleAbi,
+            abi: abi,
             data: this.store.transactionDetails.data
           })
+
+
           if (data && data.functionName) {
 
             let msg = '';
             
-
-            
             let functionName = (data as any).functionName;
-            let contract = 'Morpher Oracle - ' + functionName;
+            let contract = `Morpher ${contractName} - ${functionName}`;
             this.contract =contract
             // @ts-ignore
             const encodedData:any = getAbiItem({
-                          abi: morpherOracleAbi,
+                          abi: abi,
               name: functionName, 
             })
+            console.log('encodedData', encodedData)
             if (encodedData) {
-              let components = encodedData.inputs[0].components
+              let components = encodedData.inputs[0].components || encodedData.inputs
+              console.log('components', components)
               let item = 0
               
               components.forEach((component: any) => {
-                let dat = data.args[item].toString()
+                console.log('component.name', component.name)
+                let dat = (data.args as any)[item].toString()
                 if (component.name == '_openMPHTokenAmount' && dat !== '0') {
+                  dat = roundFormatter(Number(dat) / 10**18) + ' MPH'
+                }
+
+                if (component.name == 'amount' && dat !== '0') {
                   dat = roundFormatter(Number(dat) / 10**18) + ' MPH'
                 }
 

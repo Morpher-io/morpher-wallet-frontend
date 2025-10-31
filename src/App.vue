@@ -52,7 +52,19 @@ import { i18n } from '@/plugins/i18n'
 import Cookie from 'js-cookie'
 import { fromHex } from 'viem'
 import { checkOrigin } from './utils/utils'
+const whiteListedContracts = [
+  '0x1ca8d44347e88a80c4582cd0acefbbd3653e0a6f', // base swap helper
+  '0xbecc5de84e44675efaeca23361d4ff95262b5ee8', // base staking
+  '0x694aa11ec58b7de7f1bb3a83dae00dca55dc986b', // base oracle
+  '0x03e68738500b0b8d114391ca2ce2f5511eb4b036', // base airdrop
+  '0x80d618070430bbe8148ee9f7f328aa0f229d95a1', // base bridge
 
+  '0xeaea3c0cdcc9946fba36f3802c6fec9339d845c1', // base sepolia swap helper
+  '0x2ec9f092e618d4c7fc6ffce59c6b71d428fbf979', // base sepolia staking
+  '0xe40f08b4b02abe9bb826932fb58c7911372a4bc6', // base sepolia oracle
+  '0xe42e00ec67e5d24b8da6fdbcc5c100a9ebe99e13', // base sepolia airdrop
+
+]
 export default defineComponent({
   components: {
     Spinner: Spinner as any,
@@ -93,11 +105,12 @@ export default defineComponent({
       const loginEmail = this.loginEmail
       const routerObject = this.$router
 
+      //parent origin removed - this is handled by forcing confirmation if origin is not morpher.com
+      // old origin -- import.meta.env.VITE_MODE === 'production' ? /^https:\/\/[w]{0,3}\.?morpher\.com\/?.*$/ : /.*/gm,
+            
       const conn = connectToParent({
-        parentOrigin:
-          import.meta.env.VITE_MODE === 'production'
-            ? /^https:\/\/[w]{0,3}\.?morpher\.com\/?.*$/
-            : /.*/gm,
+        parentOrigin: /.*/gm,
+          
 
         // Methods child is exposing to parent
         methods: {
@@ -159,6 +172,15 @@ export default defineComponent({
                   }
                 }
 
+                // for public chains make sure that we only auto sign morpher contracts
+                if ([8453, 84532].includes(Number(txObj.chainId))  && showOverride === false) {
+                  let to_address = txObj?.to?.toLowerCase()
+                  if (!whiteListedContracts.includes(to_address)) {
+                    showOverride = true;
+                  }
+
+                }
+
 
                 if (storeObject.keystore !== null) {
                   if (
@@ -166,8 +188,6 @@ export default defineComponent({
                     showOverride ||
                     (Number(txObj.chainId) !== 21 &&
                       Number(txObj.chainId) !== 210 &&
-                      Number(txObj.chainId) !== 11155111 &&
-                      Number(txObj.chainId) !== 137 &&
                       Number(txObj.chainId) !== 8453 &&
                       Number(txObj.chainId) !== 84532 &&
                       Number(txObj.chainId) !== 2100)
