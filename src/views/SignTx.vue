@@ -30,7 +30,7 @@
       <div class="card column" v-if="isMPH || store.transactionDetails.value && Number(store.transactionDetails.value) > 0" >
         <p v-if="isMPH" class="eth_balance">{{ roundFormatter(mphValue) }} MPH</p>
         <p v-else class="eth_balance">
-          {{ roundFormatter(store.transactionDetails.value / Math.pow(10, 18)) }} ETH
+          {{ roundFormatter(Number(store.transactionDetails.value) / Math.pow(10, 18)) }} ETH
         </p>
       </div>
 
@@ -295,6 +295,10 @@ export default defineComponent({
                 if (component.name == 'amount' && dat !== '0') {
                   dat = roundFormatter(Number(dat) / 10**18) + ' MPH'
                 }
+                if (component.name == 'value' && dat !== '0') {
+                  dat = roundFormatter(Number(dat) / 10**18) + ' MPH'
+                }
+                
 
                 if (component.name == '_orderLeverage' && dat !== '0') {
                   dat = roundFormatter(Number(dat) / 10**8) 
