@@ -10,6 +10,7 @@
     >
       <spinner v-bind:active="loading" v-bind:status="spinnerStatusText"></spinner>
       <NetworkError :active="isNetworkError && !loading" />
+      <div>Origin: {{orig}}</div>
       
 
 
@@ -46,7 +47,7 @@ import { getRandomNFTBackground } from '@/utils/backgroundNFT'
 import type { BackgroundNFT } from '@/utils/backgroundNFT'
 import { mapState } from 'pinia'
 import { useWalletStore } from '@/stores/wallet'
-import { connectToParent } from 'penpal'
+import { connect, WindowMessenger } from 'penpal'
 import type { MorpherWalletConfig } from './types/global-types'
 import { i18n } from '@/plugins/i18n'
 import Cookie from 'js-cookie'
@@ -89,7 +90,8 @@ export default defineComponent({
     return {
       iFrameDisplay: isIframe(),
       isDev: import.meta.env.VITE_MODE !== 'production',
-      NFTBackground: null as BackgroundNFT | null
+      NFTBackground: null as BackgroundNFT | null,
+      orig: ''
     }
   },
   mounted() {
@@ -107,9 +109,14 @@ export default defineComponent({
 
       //parent origin removed - this is handled by forcing confirmation if origin is not morpher.com
       // old origin -- import.meta.env.VITE_MODE === 'production' ? /^https:\/\/[w]{0,3}\.?morpher\.com\/?.*$/ : /.*/gm,
-            
-      const conn = connectToParent({
-        parentOrigin: /.*/gm,
+
+      const messenger = new WindowMessenger({
+        remoteWindow: window.parent,
+        allowedOrigins: [/.*/gm,],
+      });
+                  
+      const conn = connect({
+        messenger,
           
 
         // Methods child is exposing to parent
@@ -163,6 +170,7 @@ export default defineComponent({
               try {
 
                 let origin: string = conn.getOrigin()
+
                 let showOverride = false
                 if (!isIframe || !checkOrigin(origin)) {
                   if (storeObject?.walletEmail && storeObject.walletEmail.includes('@email.com') && storeObject.walletEmail.includes('test') ) {
@@ -552,6 +560,13 @@ export default defineComponent({
           }
         }
       })
+
+      setTimeout(() => {
+        let origin: string = conn.getOrigin()
+        console.log('origin', origin)
+        this.orig = origin
+
+      }, 10000)
 
       this.store.setConnection(conn)
     }
