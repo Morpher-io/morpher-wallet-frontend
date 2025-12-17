@@ -117,8 +117,6 @@ export default defineComponent({
                   
       const conn = connect({
         messenger,
-          
-
         // Methods child is exposing to parent
         methods: {
           async getAccounts() {
@@ -169,8 +167,7 @@ export default defineComponent({
               //see if we are logged in?!
               try {
 
-                //let origin: string = conn.getOrigin()
-                  let origin: string = ''
+                let origin: string = conn.getOrigin()
 
                 let showOverride = false
                 if (!isIframe || !checkOrigin(origin)) {
@@ -267,8 +264,7 @@ export default defineComponent({
               //see if we are logged in?!
               try {
                 if (storeObject.keystore !== null) {
-                  //let origin: string = conn.getOrigin()
-                  let origin: string = ''
+                  let origin: string = conn.getOrigin()
                   let showOverride = false
                   if (!isIframe || !checkOrigin(origin)) {
                     if (storeObject?.walletEmail && storeObject.walletEmail.includes('@email.com') && storeObject.walletEmail.includes('test') ) {
@@ -564,8 +560,7 @@ export default defineComponent({
       })
 
       setTimeout(async () => {
-        //let origin: string = conn.getOrigin()
-        let origin: string = ''
+        let origin: string = conn.getOrigin()
         console.log('origin', origin)
         this.orig = origin
 
