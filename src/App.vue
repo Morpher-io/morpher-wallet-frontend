@@ -10,10 +10,6 @@
     >
       <spinner v-bind:active="loading" v-bind:status="spinnerStatusText"></spinner>
       <NetworkError :active="isNetworkError && !loading" />
-      <div>Origin: {{orig}}</div>
-      
-
-
       <router-view v-slot="{ Component }">
         <transition name="fade" mode="out-in">
           <component :is="Component" />
@@ -90,8 +86,7 @@ export default defineComponent({
     return {
       iFrameDisplay: isIframe(),
       isDev: import.meta.env.VITE_MODE !== 'production',
-      NFTBackground: null as BackgroundNFT | null,
-      orig: ''
+      NFTBackground: null as BackgroundNFT | null
     }
   },
   mounted() {
@@ -558,13 +553,6 @@ export default defineComponent({
           }
         }
       })
-
-      setTimeout(async () => {
-        let origin: string = conn.getOrigin()
-        console.log('origin', origin)
-        this.orig = origin
-
-      }, 10000)
 
       this.store.setConnection(conn)
     }
