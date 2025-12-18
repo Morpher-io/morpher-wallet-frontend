@@ -6,7 +6,7 @@ import Cookie from 'js-cookie'
 import { useWalletStore } from '@/stores/wallet'
 import * as Sentry from '@sentry/vue'
 import { checkErrorFilter } from '@/utils/sentry'
-import VueGtag from 'vue-gtag'
+import { createGtag } from "vue-gtag";
 import Buefy from 'buefy'
 import '@/assets/stylesheet/wallet.scss'
 import App from '@/App.vue'
@@ -116,19 +116,15 @@ if (import.meta.env.VITE_SENTRY_ENDPOINT) {
 }
 
 if (import.meta.env.VITE_GOOGLE_ANALYTICS_API_KEY) {
-  app.use(
-    VueGtag,
-    {
-      config: {
-        id: import.meta.env.VITE_GOOGLE_ANALYTICS_API_KEY,
-        params: {
-          anonymizeIp: true,
-          allowGoogleSignals: false
-        }
-      }
-    },
-    router
-  )
+  const gtag = createGtag({
+    tagId: import.meta.env.VITE_GOOGLE_ANALYTICS_API_KEY,
+    config: {
+          anonymize_ip: true,
+        allow_google_signals: false
+    }
+  })
+  app.use(gtag)
+
 }
 
 app.use(Buefy as any, {})

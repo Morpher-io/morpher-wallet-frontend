@@ -10,6 +10,7 @@ lerna-debug.log*
 node_modules
 .DS_Store
 dist
+!/lib/penpal/dist
 dist-ssr
 coverage
 *.local
@@ -28,3 +29,6 @@ coverage
 *.sw?
 
 *.tsbuildinfo
+
+.aider*
+!.aider.conf.yml

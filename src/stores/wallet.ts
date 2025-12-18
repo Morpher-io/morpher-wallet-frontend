@@ -48,9 +48,8 @@ import type {
 } from '../types/global-types'
 
 import isIframe from '@/utils/isIframe'
-import { connectToParent } from 'penpal'
+import { connect, type Connection, type Methods } from 'penpal'
 import type { HDAccount } from 'viem'
-import type { CallSender, Connection } from 'penpal/lib/types'
 import router from '@/router'
 import download from 'downloadjs'
 
@@ -77,7 +76,7 @@ export interface WalletState {
   token: string
   recoveryTypeId: number
   twoFaRequired: Type2FARequired
-  connection: Connection<CallSender> | null
+  connection: Connection<Methods> | null
   transactionDetails: any
   messageDetails: any
   openPage: string
@@ -164,7 +163,7 @@ export const useWalletStore = defineStore('wallet', {
     hiddenLoginAction(loginData: any) {
       this.hiddenLogin = loginData
     },
-    setConnection(conn: Connection<CallSender>) {
+    setConnection(conn: Connection<Methods>) {
       this.connection = conn
     },
     authRequested() {

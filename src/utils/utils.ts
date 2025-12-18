@@ -1,7 +1,6 @@
 import { i18n } from '@/plugins/i18n'
 import download from 'downloadjs'
 
-import type { BuefyNamespace } from 'buefy'
 import type { HDAccount, Hex } from 'viem'
 
 function getAccountsFromKeystore(keystore: HDAccount) {
@@ -48,7 +47,7 @@ function sortObject(object: any) {
 /*
  * Function uses to copy the given text to the clipboard. ses a hidden textArea to copy the text
  */
-const copyToClipboard = (text: string, buefy: BuefyNamespace) => {
+const copyToClipboard = (text: string, buefy: any) => {
   const textArea = document.createElement('textarea')
   // Place in top-left corner of screen regardless of scroll position.
   textArea.style.position = 'fixed'
