@@ -11,24 +11,22 @@ function getAccountsFromKeystore(keystore: HDAccount) {
 
 function downloadEncryptedKeystore(exportedSeed: any, account: string) {
   const now = new Date()
-  download(exportedSeed,
-    'keystore' + '--' + now.toISOString() + '--' + account + '.json'
-  )
+  download(exportedSeed, 'keystore' + '--' + now.toISOString() + '--' + account + '.json')
 }
 
 export const roundFormatter = (param: any) => {
-	const price = parseFloat(param);
-	const abs = Math.abs(price);
-	let round = 0;
-	if (10000 > abs && abs >= 10) round = 2;
-	else if (10 > abs && abs >= 1) round = 3;
-	else if (1 > abs && abs >= 0.1) round = 4;
-	else if (0.1 > abs && abs >= 0.01) round = 5;
-	else if (0.01 > abs && abs >= 0.001) round = 6;
-	else if (0.001 > abs && abs >= 0.0001) round = 7;
-	else if (0.0001 > abs && abs >= 0.00001) round = 8;
-	else if (0.00001 > abs) round = 9;
-	return price ? price.toFixed(round) : '0';
+  const price = parseFloat(param)
+  const abs = Math.abs(price)
+  let round = 0
+  if (10000 > abs && abs >= 10) round = 2
+  else if (10 > abs && abs >= 1) round = 3
+  else if (1 > abs && abs >= 0.1) round = 4
+  else if (0.1 > abs && abs >= 0.01) round = 5
+  else if (0.01 > abs && abs >= 0.001) round = 6
+  else if (0.001 > abs && abs >= 0.0001) round = 7
+  else if (0.0001 > abs && abs >= 0.00001) round = 8
+  else if (0.00001 > abs) round = 9
+  return price ? price.toFixed(round) : '0'
 }
 
 function sortObject(object: any) {
@@ -79,9 +77,8 @@ const copyToClipboard = (text: string, buefy: any) => {
     textArea.style.display = 'none'
 
     if (successful) {
-      
       document.body.removeChild(textArea)
-      
+
       buefy.snackbar.open({
         duration: 5000,
         message: i18n.t('COPY_CLIPBOARD_SUCCESS').toString(),
@@ -128,11 +125,12 @@ const formatEthAddress = (ethAddress: string) => {
 }
 
 const checkOrigin = (origin: string) => {
-  const originCheck = import.meta.env.VITE_MODE === 'production'
-            ? /^https:\/\/[w]{0,3}\.?morpher\.com\/?.*$/
-            : /^https:\/\/dev-test\.?morpher.com\/?.*$/
-  const regex = new RegExp(originCheck);
-   return regex.test(origin)
+  const originCheck =
+    import.meta.env.VITE_MODE === 'production'
+      ? /^https:\/\/([w]{0,3}\.?morpher\.com|[w]{0,3}\.?frenzy\.finance)\/?.*$/
+      : /^https:\/\/(dev-test\.?morpher\.com|[w]{0,3}\.?frenzy\.finance)\/?.*$/
+  const regex = new RegExp(originCheck)
+  return regex.test(origin)
 }
 
 export {
