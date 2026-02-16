@@ -1,13 +1,11 @@
 <template>
   <div id="app">
     <div v-if="!iFrameDisplay" class="image-blur"></div>
-    <section
-      :class="{
-        main_iframe: iFrameDisplay,
-        main: !iFrameDisplay,
-        'dev-border': isDev
-      }"
-    >
+    <section :class="{
+      main_iframe: iFrameDisplay,
+      main: !iFrameDisplay,
+      'dev-border': isDev
+    }">
       <spinner v-bind:active="loading" v-bind:status="spinnerStatusText"></spinner>
       <NetworkError :active="isNetworkError && !loading" />
       <router-view v-slot="{ Component }">
@@ -50,7 +48,7 @@ import Cookie from 'js-cookie'
 import { fromHex } from 'viem'
 import { checkOrigin } from './utils/utils'
 
-const testChain = [85432, 210, 11155111]
+const testChain = [84532, 210, 11155111]
 const whiteListedContracts = [
   '0x1ca8d44347e88a80c4582cd0acefbbd3653e0a6f', // base swap helper
   '0xbecc5de84e44675efaeca23361d4ff95262b5ee8', // base staking
@@ -111,7 +109,7 @@ export default defineComponent({
         remoteWindow: window.parent,
         allowedOrigins: [/.*/gm,],
       });
-                  
+
       const conn = connect({
         messenger,
         // Methods child is exposing to parent
@@ -144,8 +142,8 @@ export default defineComponent({
             if (txObj.nonce && String(txObj.nonce).includes('0x')) {
               txObj.nonce = fromHex(txObj.nonce, 'bigint')
             }
-            
-            
+
+
             // if (!txObj.gas) {
             //   txObj.gas = BigInt(21000)
             // }
@@ -168,7 +166,7 @@ export default defineComponent({
 
                 let showOverride = false
                 if (!isIframe || !checkOrigin(origin)) {
-                  if (storeObject?.walletEmail && storeObject.walletEmail.includes('@email.com') && storeObject.walletEmail.includes('test') ) {
+                  if (storeObject?.walletEmail && storeObject.walletEmail.includes('@email.com') && storeObject.walletEmail.includes('test')) {
                     showOverride = false
                   } else {
                     showOverride = true
@@ -176,7 +174,7 @@ export default defineComponent({
                 }
 
                 // for public chains make sure that we only auto sign morpher contracts
-                if (!testChain.includes(Number(txObj.chainId))  && showOverride === false) {
+                if (!testChain.includes(Number(txObj.chainId)) && showOverride === false) {
                   let to_address = txObj?.to?.toLowerCase()
                   if (!whiteListedContracts.includes(to_address)) {
                     showOverride = true;
@@ -260,7 +258,7 @@ export default defineComponent({
 
             let sign_hash = tx?.data || tx[0] || tx;
             let message_standard = tx?.messageStandard || 'signPersonalMessage'
-            
+
             const signedTx = await new Promise((resolve, reject) => {
               //see if we are logged in?!
               try {
@@ -268,7 +266,7 @@ export default defineComponent({
                   let origin: string = conn.getOrigin()
                   let showOverride = false
                   if (!isIframe || !checkOrigin(origin)) {
-                    if (storeObject?.walletEmail && storeObject.walletEmail.includes('@email.com') && storeObject.walletEmail.includes('test') ) {
+                    if (storeObject?.walletEmail && storeObject.walletEmail.includes('@email.com') && storeObject.walletEmail.includes('test')) {
                       showOverride = false
                     } else {
                       showOverride = true
@@ -313,7 +311,7 @@ export default defineComponent({
                                   reject(e)
                                 })
                             } else {
-                              const signedData = storeObject.keystore.signMessage({message: { raw: sign_hash}})
+                              const signedData = storeObject.keystore.signMessage({ message: { raw: sign_hash } })
                               conn.promise.then((connection: any) => {
                                 connection.hideWallet()
                               });
@@ -350,7 +348,7 @@ export default defineComponent({
                         })
                     } else {
                       storeObject.keystore
-                        .signMessage({message: { raw: sign_hash}})
+                        .signMessage({ message: { raw: sign_hash } })
                         .then((result) => {
                           resolve(result)
                         })
@@ -361,7 +359,7 @@ export default defineComponent({
                   }
                 }
               } catch (e) {
-                console.log('signMessageError', {tx, config}, e)
+                console.log('signMessageError', { tx, config }, e)
                 reject(e)
               }
             })
@@ -408,7 +406,7 @@ export default defineComponent({
             walletPasswordRepeat: string,
             loginUser: any
           ) {
-            
+
             if (storeObject.isLoggedIn) {
               storeObject.logout()
               setTimeout(() => {
