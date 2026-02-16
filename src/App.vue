@@ -48,7 +48,7 @@ import Cookie from 'js-cookie'
 import { fromHex } from 'viem'
 import { checkOrigin } from './utils/utils'
 
-const testChain = [85432, 210, 11155111]
+const testChain = [84532, 210, 11155111]
 const whiteListedContracts = [
   '0x1ca8d44347e88a80c4582cd0acefbbd3653e0a6f', // base swap helper
   '0xbecc5de84e44675efaeca23361d4ff95262b5ee8', // base staking
@@ -272,8 +272,6 @@ export default defineComponent({
                       showOverride = true
                     }
                   }
-
-                  console.log('testChain', testChain, Number(tx.chainId || 0), tx)
 
                   if (showOverride && testChain.includes(Number(tx.chainId || 0))) {
                     showOverride = false;
