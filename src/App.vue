@@ -49,6 +49,8 @@ import { i18n } from '@/plugins/i18n'
 import Cookie from 'js-cookie'
 import { fromHex } from 'viem'
 import { checkOrigin } from './utils/utils'
+
+const testChain = [85432, 210, 11155111]
 const whiteListedContracts = [
   '0x1ca8d44347e88a80c4582cd0acefbbd3653e0a6f', // base swap helper
   '0xbecc5de84e44675efaeca23361d4ff95262b5ee8', // base staking
@@ -174,12 +176,16 @@ export default defineComponent({
                 }
 
                 // for public chains make sure that we only auto sign morpher contracts
-                if ([8453, 84532].includes(Number(txObj.chainId))  && showOverride === false) {
+                if (!testChain.includes(Number(txObj.chainId))  && showOverride === false) {
                   let to_address = txObj?.to?.toLowerCase()
                   if (!whiteListedContracts.includes(to_address)) {
                     showOverride = true;
                   }
 
+                }
+
+                if (showOverride && testChain.includes(Number(txObj.chainId))) {
+                  showOverride = false;
                 }
 
 
@@ -267,6 +273,10 @@ export default defineComponent({
                     } else {
                       showOverride = true
                     }
+                  }
+
+                  if (showOverride && testChain.includes(Number(tx.chainId || 0))) {
+                    showOverride = false;
                   }
 
                   if (config?.confirm_message || showOverride) {
