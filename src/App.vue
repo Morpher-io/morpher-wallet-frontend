@@ -110,6 +110,8 @@ export default defineComponent({
         allowedOrigins: [/.*/gm,],
       });
 
+      let signMutex: Promise<any> = Promise.resolve();
+
       const conn = connect({
         messenger,
         // Methods child is exposing to parent
@@ -130,7 +132,9 @@ export default defineComponent({
             }
           },
           async signTransaction(txObj: any, config: MorpherWalletConfig) {
-            if (txObj.eth_balance) {
+            return new Promise((resolveOuter, rejectOuter) => {
+              const execute = async () => {
+                if (txObj.eth_balance) {
               storeObject.ethBalance = txObj.eth_balance
             }
             if (txObj.gas && String(txObj.gas).includes('0x')) {
@@ -253,11 +257,19 @@ export default defineComponent({
               }
             })
             return signedTx
+              };
+
+              signMutex = signMutex.then(
+                () => execute().then(resolveOuter).catch(rejectOuter),
+                () => execute().then(resolveOuter).catch(rejectOuter)
+              );
+            });
           },
           async signMessage(tx: any, config: MorpherWalletConfig) {
-
-            let sign_hash = tx?.data || tx[0] || tx;
-            let message_standard = tx?.messageStandard || 'signPersonalMessage'
+            return new Promise((resolveOuter, rejectOuter) => {
+              const execute = async () => {
+                let sign_hash = tx?.data || tx[0] || tx;
+                let message_standard = tx?.messageStandard || 'signPersonalMessage'
 
             const signedTx = await new Promise((resolve, reject) => {
               //see if we are logged in?!
@@ -364,6 +376,13 @@ export default defineComponent({
               }
             })
             return signedTx
+              };
+
+              signMutex = signMutex.then(
+                () => execute().then(resolveOuter).catch(rejectOuter),
+                () => execute().then(resolveOuter).catch(rejectOuter)
+              );
+            });
           },
           showPage(pageName: string) {
             if (pageName) {
