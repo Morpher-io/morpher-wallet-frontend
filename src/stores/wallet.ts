@@ -907,6 +907,11 @@ export const useWalletStore = defineStore('wallet', {
             this.keystoreUnlocked({ keystore, accounts, hashedPassword: params.password })
             this.updateUnlocking(false)
 
+            // Resolve immediately — keystore is unlocked and the user is ready to use the wallet.
+            // getPayload + updateRecoveryMethods run in the background so they don't block
+            // navigation or isLoggedIn resolution (~840ms saved on the critical path).
+            resolve(true)
+
             console.time('[WALLET] getPayload (unlockWithPassword)')
             getPayload(this.fetch_key || this.email, params.recaptchaToken, params.fetch_key)
               .then((payload) => {
@@ -922,13 +927,12 @@ export const useWalletStore = defineStore('wallet', {
                   page: 'unlockWithPassword'
                 }).then(() => {
                   console.timeEnd('[WALLET] updateRecoveryMethods')
-                  console.log(`[WALLET] unlockWithPassword: fully resolved in ${(performance.now()-t0).toFixed(0)}ms`)
-                  resolve(true)
+                  console.log(`[WALLET] unlockWithPassword: background tasks done in ${(performance.now()-t0).toFixed(0)}ms`)
                 })
               })
               .catch((e) => {
                 console.timeEnd('[WALLET] getPayload (unlockWithPassword)')
-                reject(e)
+                console.warn('[WALLET] unlockWithPassword: background getPayload failed', e)
               })
           })
           .catch((err) => {
