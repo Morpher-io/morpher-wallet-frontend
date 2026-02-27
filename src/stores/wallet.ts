@@ -1118,9 +1118,16 @@ export const useWalletStore = defineStore('wallet', {
       return new Promise(async (resolve, reject) => {
         try {
           const body = params.body
-          let key = await getSessionStore('fetch_key')
-          if (!key) {
-            key = await sha256(this.fetch_key || this.email.toLowerCase())
+          // Prefer the in-memory fetch_key (already available after unlock) to avoid
+          // sessionStorage cross-tab polling (400ms delay when not cached locally).
+          let key: string
+          if (this.fetch_key) {
+            key = await sha256(this.fetch_key)
+          } else {
+            key = await getSessionStore('fetch_key')
+            if (!key) {
+              key = await sha256(this.email.toLowerCase())
+            }
           }
           body.nonce = (await getNonce(key)).nonce
           const signMessage = JSON.stringify(sortObject(body))
@@ -1163,6 +1170,7 @@ export const useWalletStore = defineStore('wallet', {
         }
       })
     },
+
     resetRecoveryMethod(params: TypeResetRecovery) {
       return new Promise((resolve, reject) => {
         this.sendSignedRequest({
