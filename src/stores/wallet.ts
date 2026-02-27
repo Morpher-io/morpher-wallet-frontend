@@ -375,8 +375,12 @@ export const useWalletStore = defineStore('wallet', {
       this.updateNetworkError(isNetworkError)
     },
     async loadEncryptedSeed() {
+      console.time('[WALLET] loadEncryptedSeed total')
       let encryptedSeed: TypeEncryptedSeed = {}
+      console.time('[WALLET] getSessionStore(encryptedSeed)')
       const sessionEncryptedSeed = await getSessionStore('encryptedSeed')
+      console.timeLog('[WALLET] loadEncryptedSeed total', 'getSessionStore(encryptedSeed) done')
+      console.timeEnd('[WALLET] getSessionStore(encryptedSeed)')
       const recoveryTypeId = Number((await localStorage.getItem('recoveryTypeId')) || 1)
       if (sessionEncryptedSeed) {
         try {
@@ -388,7 +392,10 @@ export const useWalletStore = defineStore('wallet', {
         } catch {
           encryptedSeed = {}
         }
+      } else {
+        console.warn('[WALLET] loadEncryptedSeed: no encryptedSeed found in session storage')
       }
+      console.timeEnd('[WALLET] loadEncryptedSeed total')
     },
     /**
      * Fetch the user data from the database and attempt to unlock the wallet using the mail encrypted seed
@@ -819,29 +826,61 @@ export const useWalletStore = defineStore('wallet', {
      * Unlock wallet using the password stored in local state
      */
     async unlockWithStoredPassword(recaptchaToken: string) {
+      const t0 = performance.now()
+      console.time('[WALLET] unlockWithStoredPassword total')
+      console.log('[WALLET] unlockWithStoredPassword start', {
+        hasEncryptedSeed: !!(this.encryptedSeed && this.encryptedSeed.ciphertext),
+        hasHashedPassword: !!this.hashedPassword,
+        email: this.email
+      })
       this.updateUnlocking(true)
 
       const fetch_key = window.sessionStorage.getItem('fetch_key') || ''
 
       if (!this.encryptedSeed || !this.encryptedSeed.ciphertext) {
+        console.time('[WALLET] loadEncryptedSeed (called from unlockWithStoredPassword)')
         await this.loadEncryptedSeed()
+        console.timeEnd('[WALLET] loadEncryptedSeed (called from unlockWithStoredPassword)')
+      } else {
+        console.log('[WALLET] unlockWithStoredPassword: encryptedSeed already in memory, skipping loadEncryptedSeed')
       }
 
       if (!this.hashedPassword) {
+        console.time('[WALLET] loadPassword')
         await this.loadPassword()
+        console.timeEnd('[WALLET] loadPassword')
+      } else {
+        console.log('[WALLET] unlockWithStoredPassword: hashedPassword already in memory, skipping loadPassword')
       }
+
+      console.timeLog('[WALLET] unlockWithStoredPassword total', `after session loads (${(performance.now()-t0).toFixed(0)}ms)`)
+      console.log('[WALLET] unlockWithStoredPassword after session loads', {
+        hasEncryptedSeed: !!(this.encryptedSeed && this.encryptedSeed.ciphertext),
+        hasHashedPassword: !!this.hashedPassword
+      })
+
       return new Promise((resolve, reject) => {
         if (this.hashedPassword && this.encryptedSeed.ciphertext !== undefined) {
+          console.time('[WALLET] unlockWithPassword')
           this.unlockWithPassword({ password: this.hashedPassword, recaptchaToken, fetch_key })
             .then(() => {
+              console.timeEnd('[WALLET] unlockWithPassword')
+              console.timeEnd('[WALLET] unlockWithStoredPassword total')
               this.updateUnlocking(false)
               resolve(true)
             })
             .catch((e) => {
+              console.timeEnd('[WALLET] unlockWithPassword')
+              console.timeEnd('[WALLET] unlockWithStoredPassword total')
               this.updateUnlocking(false)
               reject(e)
             })
         } else {
+          console.warn('[WALLET] unlockWithStoredPassword: missing password or encryptedSeed, rejecting', {
+            hasHashedPassword: !!this.hashedPassword,
+            hasEncryptedSeed: !!(this.encryptedSeed && this.encryptedSeed.ciphertext)
+          })
+          console.timeEnd('[WALLET] unlockWithStoredPassword total')
           this.updateUnlocking(false)
           reject(new Error())
         }
@@ -855,32 +894,45 @@ export const useWalletStore = defineStore('wallet', {
      */
     unlockWithPassword(params: TypeUnlockWithPassword) {
       this.updateUnlocking(true)
+      const t0 = performance.now()
       return new Promise((resolve, reject) => {
+        console.time('[WALLET] getKeystoreFromEncryptedSeed')
         getKeystoreFromEncryptedSeed(this.encryptedSeed, params.password)
           .then((keystore: HDAccount) => {
+            console.timeEnd('[WALLET] getKeystoreFromEncryptedSeed')
+            console.log(`[WALLET] unlockWithPassword: keystore decrypted in ${(performance.now()-t0).toFixed(0)}ms`)
             const accounts = getAccountsFromKeystore(keystore)
             this.loginRetryCount = 0
 
             this.keystoreUnlocked({ keystore, accounts, hashedPassword: params.password })
+            this.updateUnlocking(false)
+
+            console.time('[WALLET] getPayload (unlockWithPassword)')
             getPayload(this.fetch_key || this.email, params.recaptchaToken, params.fetch_key)
               .then((payload) => {
+                console.timeEnd('[WALLET] getPayload (unlockWithPassword)')
+                console.log(`[WALLET] unlockWithPassword: getPayload done in ${(performance.now()-t0).toFixed(0)}ms`)
                 this.setIpCountry(payload.ip_country || '')
                 this.updatePayload(payload)
+                console.time('[WALLET] updateRecoveryMethods')
                 this.updateRecoveryMethods({
                   dbUpdate: true,
                   recoveryTypeId: this.recoveryTypeId.toString(),
                   email: this.email,
                   page: 'unlockWithPassword'
                 }).then(() => {
+                  console.timeEnd('[WALLET] updateRecoveryMethods')
+                  console.log(`[WALLET] unlockWithPassword: fully resolved in ${(performance.now()-t0).toFixed(0)}ms`)
                   resolve(true)
                 })
               })
               .catch((e) => {
+                console.timeEnd('[WALLET] getPayload (unlockWithPassword)')
                 reject(e)
               })
-            this.updateUnlocking(false)
           })
           .catch((err) => {
+            console.timeEnd('[WALLET] getKeystoreFromEncryptedSeed')
             this.updateUnlocking(false)
             this.loginRetryCount += 1
             if (this.loginRetryCount >= 3) this.authError("The user wasn't found: Signup first!")
@@ -1271,9 +1323,13 @@ export const useWalletStore = defineStore('wallet', {
       this.updateSeedPhrase({ seedPhrase: '' })
     },
     async loadPassword() {
+      console.time('[WALLET] getSessionStore(password)')
       const password = await getSessionStore('password')
+      console.timeEnd('[WALLET] getSessionStore(password)')
       if (password) {
         this.hashedPassword = password
+      } else {
+        console.warn('[WALLET] loadPassword: no password found in session storage')
       }
     },
     deleteWalletAccount(params: TypeShowPhraseKeyVariables) {
