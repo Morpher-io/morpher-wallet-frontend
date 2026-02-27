@@ -521,10 +521,21 @@ export default defineComponent({
               })
             }
             let counter = 0
-            // wait for the store to finish unlocking if it is in progress
+            
+            // Wait for unlocking to finish if it's currently unlocking
+            while (storeObject.unlocking && counter < 50) {
+              counter += 1
+              await waitForRecovery()
+            }
+            
+            if (!storeObject.isLoggedIn) {
+               return false;
+            }
+
+            counter = 0;
+            // wait for the store to finish loading recovery methods
             while (!storeObject.recoveryLoaded && counter < 50) {
               counter += 1
-              // wait for the wallet to finish unlocking
               await waitForRecovery()
             }
             if (!storeObject.recoveryLoaded) {

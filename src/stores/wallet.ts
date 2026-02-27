@@ -147,7 +147,7 @@ export const useWalletStore = defineStore('wallet', {
       signMessage: null,
       signResponse: null,
       ethBalance: '0',
-      unlocking: true,
+      unlocking: email !== '',
       redirectPath: '',
       loginRetryCount: 0,
       ipCountry: '',
