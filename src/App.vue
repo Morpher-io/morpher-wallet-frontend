@@ -469,7 +469,6 @@ export default defineComponent({
             const t0 = performance.now()
             let counter = 0
             const wasUnlocking = storeObject.unlocking
-            console.log('[WALLET] isLoggedIn called', { unlocking: storeObject.unlocking, hasKeystore: !!storeObject.keystore })
 
             const waitForUnlock = () => {
               return new Promise((resolve) => {
@@ -482,9 +481,7 @@ export default defineComponent({
               // wait for the wallet to finish unlocking
               await waitForUnlock()
             }
-            if (wasUnlocking) {
-              console.log(`[WALLET] isLoggedIn: waited ${counter} polls (${(performance.now()-t0).toFixed(0)}ms) for unlocking to finish`)
-            }
+
             const recoveryMethods = storeObject.recoveryMethods
 
             if (storeObject.keystore) {

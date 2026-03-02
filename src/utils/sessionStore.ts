@@ -58,7 +58,6 @@ export function saveSessionStore(key: string, value: string) {
 }
 // Get session storage data from other tabs
 async function getFromOtherTab(key: string): Promise<string> {
-  console.time(`[SESSION] getFromOtherTab(${key})`)
   return new Promise((resolve, reject) => {
     try {
       let sessionValue = ''
@@ -72,13 +71,10 @@ async function getFromOtherTab(key: string): Promise<string> {
         // waiting 1100ms just wastes time when no other tab is available.
         if (timeout > 3 || sessionValue) {
           clearInterval(interval)
-          console.timeEnd(`[SESSION] getFromOtherTab(${key})`)
-          console.log(`[SESSION] getFromOtherTab(${key}): resolved after ${timeout} polls (${timeout * 100}ms)`, sessionValue ? 'value found' : 'no value found')
           resolve(sessionValue || '')
         }
       }, 100)
     } catch (err) {
-      console.timeEnd(`[SESSION] getFromOtherTab(${key})`)
       reject(err)
     }
   })
@@ -94,14 +90,9 @@ export async function getSessionStore(key: string): Promise<string> {
         // from another tab, so skip the cross-tab wait entirely.
         const hasLogin = localStorage.getItem('login') === 'true'
         if (hasLogin) {
-          console.log(`[SESSION] getSessionStore(${key}): not found locally, polling other tabs...`)
           sessionValue = await getFromOtherTab(key)
-        } else {
-          console.log(`[SESSION] getSessionStore(${key}): no login flag, skipping cross-tab poll`)
         }
-      } else {
-        console.log(`[SESSION] getSessionStore(${key}): found locally (immediate)`)
-      }
+      } 
 
       resolve(sessionValue || '')
     } catch (err) {
