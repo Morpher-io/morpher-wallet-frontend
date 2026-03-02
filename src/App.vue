@@ -466,7 +466,9 @@ export default defineComponent({
             storeObject.hiddenLoginAction({ action: '2fasend', type: '2fasend', twoFACode: twoFACode })
           },
           async isLoggedIn() {
+            const t0 = performance.now()
             let counter = 0
+            const wasUnlocking = storeObject.unlocking
 
             const waitForUnlock = () => {
               return new Promise((resolve) => {
@@ -479,6 +481,7 @@ export default defineComponent({
               // wait for the wallet to finish unlocking
               await waitForUnlock()
             }
+
             const recoveryMethods = storeObject.recoveryMethods
 
             if (storeObject.keystore) {
@@ -521,10 +524,21 @@ export default defineComponent({
               })
             }
             let counter = 0
-            // wait for the store to finish unlocking if it is in progress
+            
+            // Wait for unlocking to finish if it's currently unlocking
+            while (storeObject.unlocking && counter < 50) {
+              counter += 1
+              await waitForRecovery()
+            }
+            
+            if (!storeObject.isLoggedIn) {
+               return false;
+            }
+
+            counter = 0;
+            // wait for the store to finish loading recovery methods
             while (!storeObject.recoveryLoaded && counter < 50) {
               counter += 1
-              // wait for the wallet to finish unlocking
               await waitForRecovery()
             }
             if (!storeObject.recoveryLoaded) {

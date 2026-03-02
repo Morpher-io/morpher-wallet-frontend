@@ -67,7 +67,9 @@ async function getFromOtherTab(key: string): Promise<string> {
       const interval = setInterval(() => {
         timeout += 1
         sessionValue = sessionStorage.getItem(key) || ''
-        if (timeout > 10 || sessionValue) {
+        // Reduced from 10 to 3: if another tab is open it responds in <100ms,
+        // waiting 1100ms just wastes time when no other tab is available.
+        if (timeout > 3 || sessionValue) {
           clearInterval(interval)
           resolve(sessionValue || '')
         }
@@ -83,8 +85,14 @@ export async function getSessionStore(key: string): Promise<string> {
     try {
       let sessionValue = sessionStorage.getItem(key) || ''
       if (!sessionValue) {
-        sessionValue = await getFromOtherTab(key)
-      }
+        // Only poll other tabs if the user has an active login session.
+        // If localStorage.login is not 'true', there's nothing to retrieve
+        // from another tab, so skip the cross-tab wait entirely.
+        const hasLogin = localStorage.getItem('login') === 'true'
+        if (hasLogin) {
+          sessionValue = await getFromOtherTab(key)
+        }
+      } 
 
       resolve(sessionValue || '')
     } catch (err) {
