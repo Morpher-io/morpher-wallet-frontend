@@ -55,11 +55,14 @@ const whiteListedContracts = [
   '0x694aa11ec58b7de7f1bb3a83dae00dca55dc986b', // base oracle
   '0x03e68738500b0b8d114391ca2ce2f5511eb4b036', // base airdrop
   '0x80d618070430bbe8148ee9f7f328aa0f229d95a1', // base bridge
+  '0x6ff5693b99212da76ad316178a184ab56d299b43', // base uniswap universal router
 
   '0xeaea3c0cdcc9946fba36f3802c6fec9339d845c1', // base sepolia swap helper
   '0x2ec9f092e618d4c7fc6ffce59c6b71d428fbf979', // base sepolia staking
   '0xe40f08b4b02abe9bb826932fb58c7911372a4bc6', // base sepolia oracle
   '0xe42e00ec67e5d24b8da6fdbcc5c100a9ebe99e13', // base sepolia airdrop
+  '0x492e6456d9528771018deb9e87ef7750ef184104', // base sepolia uniswap universal router
+  
 
 ]
 export default defineComponent({
