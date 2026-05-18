@@ -1,11 +1,11 @@
 <template>
   <div id="app">
-    <div v-if="!iFrameDisplay" class="image-blur"></div>
+    <!-- <div v-if="!iFrameDisplay" class="image-blur"></div> -->
     <section :class="{
       main_iframe: iFrameDisplay,
       main: !iFrameDisplay,
       'dev-border': isDev
-    }">
+    }" style="flex-shrink: 0;">
       <spinner v-bind:active="loading" v-bind:status="spinnerStatusText"></spinner>
       <NetworkError :active="isNetworkError && !loading" />
       <router-view v-slot="{ Component }">
@@ -25,6 +25,10 @@
         }}</a>
       </div>
     </section>
+
+    <SunsetCard v-if="!store.keystore" />
+        
+
     <Footer v-if="!iFrameDisplay" :NFTBackground="NFTBackground" />
   </div>
 </template>
@@ -35,6 +39,7 @@ import { defineComponent } from 'vue'
 import Spinner from '@/components/loading-spinner/Spinner.vue'
 import NetworkError from '@/components/NetworkError.vue'
 import Footer from '@/components/Footer.vue'
+import SunsetCard from '@/components/SunsetCard.vue'
 import { RouterLink, RouterView } from 'vue-router'
 
 import { getRandomNFTBackground } from '@/utils/backgroundNFT'
@@ -70,6 +75,7 @@ export default defineComponent({
     Spinner: Spinner as any,
     NetworkError: NetworkError as any,
     Footer: Footer as any,
+    SunsetCard,
     RouterView
   },
   computed: {
